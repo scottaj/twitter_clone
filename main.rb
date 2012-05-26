@@ -1,5 +1,11 @@
-def routing_table()
+require 'sinatra'
 
+# Main routing table for application.
+def routing_table()
+  get '/' do
+
+  end
+  
 end
 
 
