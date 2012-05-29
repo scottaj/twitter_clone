@@ -23,4 +23,8 @@ class User
   def tweet(text)
     return Tweet.new(text, self)
   end
+
+  def serialize()
+    return {:doctype => :user, :document => {:_id => @handle, :following => @following}}
+  end
 end

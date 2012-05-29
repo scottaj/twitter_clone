@@ -12,4 +12,8 @@ class Tweet
   end
 
   attr_reader :text, :user, :timestamp, :tags
+
+  def serialize()
+    return {:doctype => "tweet", :document => {:text => @text, :user => @user, :timestamp => @timestamp, :tags => @tags}}
+  end
 end

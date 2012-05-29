@@ -18,4 +18,8 @@ class TestUser < Test::Unit::TestCase
     assert_equal(Set.new(["wasted"]), @tweet_2.tags, "Testing tweet with 1 interpolated tag.")
     assert_equal(Set.new(["drunk", "partyrocker", "brolife"]), @tweet_3.tags, "testing tweet with multiple tags including endtags.")
   end
+
+  def test_serialize()
+    assert_equal({:doctype => "tweet", :document => {:text => @tweet_1.text, :user => @tweet_1.user, :timestamp => @tweet_1.timestamp, :tags => @tweet_1.tags}}, @tweet_1.serialize, "Testing serialization of tweets.")
+  end
 end

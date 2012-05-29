@@ -33,4 +33,8 @@ class TestUser < Test::Unit::TestCase
     assert_equal(Set.new(["coding", "ruby"]), tweet.tags, "Testing tweet tags.")
     assert_equal(Time.now.wday, tweet.timestamp.wday, "Testing tweet timestamp.")
   end
+
+  def test_serialize()
+    assert_equal({:doctype => :user, :document => {:_id => @user.handle, :following => @user.following}}, @user.serialize, "Testing serialization of user.")
+  end
 end
