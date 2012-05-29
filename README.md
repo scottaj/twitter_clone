@@ -1,10 +1,10 @@
 # Ruby Web Project
 
-##Assignment
+## Assignment
 
 Develop and deploy a Twitter clone.
 
-###Features:
+### Features:
 
 As a logged-in user I can:
 Tweet
@@ -15,14 +15,14 @@ Follow/unfollow other users
 See who I’m following
 See the Tweets of the people I’m following
 
-###Constraints:
+### Constraints:
 
 Back-end in Sinatra
 Data in MongoDB
 Front-end in Bootstrap
 Deploy to Heroku
 
-###Scenarios:
+### Scenarios:
 
 (preliminary): Sign-in
 I can sign-in by clicking “Sign In” on any page, and entering my handle.  (Skip password auth for now.)  I should land on my home page
