@@ -3,10 +3,15 @@ require_relative 'tweet.rb'
 
 # Class representing an individual user.
 class User
-  def initialize(handle, following = Set.new)
+  def initialize(handle, following = nil)
     @handle = handle
-    @following = following
     @modified = false
+
+    if following
+      @following = Set.new(following)
+    else
+      @following = Set.new
+    end  
   end
 
   attr_reader :handle, :following

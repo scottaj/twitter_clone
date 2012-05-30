@@ -26,15 +26,20 @@ class TestUser < Test::Unit::TestCase
     assert_equal(Set.new(), @user.following, "Did not handle removing a user who wasen't being followed properly.")
   end
 
+  def test_modify_flag()
+    @user.modified = false
+    @user.follow_user(@other_user)
+    assert(@user.modified, "Testing modified flag on follow user.")
+    @user.modified = false
+    @user.unfollow_user(@other_user)
+    assert(@user.modified, "Testing modified flag on unfollow user.")
+  end
+
   def test_tweet()
     tweet = @user.tweet("Making my own twitter backend. #coding #ruby")
     assert_equal("Making my own twitter backend. #coding #ruby", tweet.text, "Testing tweet text.")
     assert_equal("test", tweet.user, "Testing tweet user handle.")
     assert_equal(Set.new(["coding", "ruby"]), tweet.tags, "Testing tweet tags.")
     assert_equal(Time.now.wday, tweet.timestamp.wday, "Testing tweet timestamp.")
-  end
-
-  def test_serialize()
-    assert_equal({:doctype => :user, :document => {:_id => @user.handle, :following => @user.following}}, @user.serialize, "Testing serialization of user.")
   end
 end
