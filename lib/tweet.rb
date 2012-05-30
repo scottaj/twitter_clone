@@ -1,19 +1,20 @@
 require 'set'
 
 class Tweet
-  def initialize(text, user)
+  def initialize(text, user, timestamp = Time.now, tags = nil)
     @text = text
     @user = user.handle
-    @timestamp = Time.now()
-    @tags = Set.new()
+    @timestamp = timestamp
 
-    # Extract tags from text, strip hash from tag.
-    text.scan(/#\S+/) {|match| @tags << match[/[^#]+/]}
+    if tags
+      @tags = tags
+    else
+      @tags = Set.new
+      
+      # Extract tags from text, strip hash from tag.
+      text.scan(/#\S+/) {|match| @tags << match[/[^#]+/]}
+    end
   end
 
   attr_reader :text, :user, :timestamp, :tags
-
-  def serialize()
-    return {:doctype => "tweet", :document => {:text => @text, :user => @user, :timestamp => @timestamp, :tags => @tags}}
-  end
 end
