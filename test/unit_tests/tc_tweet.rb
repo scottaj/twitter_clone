@@ -2,7 +2,7 @@ require 'test/unit'
 require_relative '../../lib/tweet.rb'
 require_relative '../../lib/user.rb'
 
-class TestUser < Test::Unit::TestCase
+class TestTweet < Test::Unit::TestCase
   def setup()
     @user = User.new("Jimbo")
     text_1 = "Got super plastered last night!"
