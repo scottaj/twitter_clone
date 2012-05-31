@@ -34,6 +34,11 @@ class UserModel
     user.modified = false
   end
 
+  def user_exists?(handle)
+    return true if @connection.find_one("_id" => /\A#{handle}\z/i)
+    return false
+  end
+    
   ##
   # Queries database for a user with the specified handle, if user
   # exists then an object is generated with the database info and
