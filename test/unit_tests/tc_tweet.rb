@@ -4,13 +4,13 @@ require_relative '../../lib/user.rb'
 
 class TestUser < Test::Unit::TestCase
   def setup()
-    user = User.new("Jimbo")
+    @user = User.new("Jimbo")
     text_1 = "Got super plastered last night!"
     text_2 = "Got soooo #wasted last night!"
     text_3 = "Got super #drunk last night! #partyrocker #brolife"
-    @tweet_1 = Tweet.new(text_1, user)
-    @tweet_2 = Tweet.new(text_2, user)
-    @tweet_3 = Tweet.new(text_3, user)
+    @tweet_1 = Tweet.new(text_1, @user)
+    @tweet_2 = Tweet.new(text_2, @user)
+    @tweet_3 = Tweet.new(text_3, @user)
   end
 
   def test_tag_extraction
@@ -19,7 +19,10 @@ class TestUser < Test::Unit::TestCase
     assert_equal(Set.new(["drunk", "partyrocker", "brolife"]), @tweet_3.tags, "testing tweet with multiple tags including endtags.")
   end
 
-  def test_serialize()
-    assert_equal({:doctype => "tweet", :document => {:text => @tweet_1.text, :user => @tweet_1.user, :timestamp => @tweet_1.timestamp, :tags => @tweet_1.tags}}, @tweet_1.serialize, "Testing serialization of tweets.")
+  def test_equality()
+    eql_tweet = Tweet.new(@tweet_1.text, @user, @tweet_1.timestamp, @tweet_1.tags)
+    neql_tweet = Tweet.new(@tweet_1.text, User.new("hi"))
+    assert_equal(@tweet_1, eql_tweet, "Testing tweet equality.")
+    assert_not_equal(@tweet_1, neql_tweet, "Testing inequality.")
   end
 end
