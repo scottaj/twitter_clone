@@ -29,7 +29,9 @@ class User
     @modified = true
   end
 
-  def tweet(text)
-    return Tweet.new(text, self)
+  def tweet(text, model)
+    tweet = Tweet.new(text, self)
+    model.save_tweet(tweet)
+    return tweet
   end
 end

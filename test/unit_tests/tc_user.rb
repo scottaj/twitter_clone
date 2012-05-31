@@ -1,11 +1,15 @@
 require 'test/unit'
 require_relative '../../lib/user.rb'
+require_relative '../../lib/tweet_model.rb'
 
 class TestUser < Test::Unit::TestCase
   def setup()
     @user = User.new("test")
     @other_user = User.new("thatGuy")
     @one_more_user = User.new("oneMore")
+    connection = Mongo::Connection.new.db("testdb")
+    collection = "testColl"
+    @tweet_model = TweetModel.new(connection, collection)
   end
 
   def test_follow_user()
@@ -36,7 +40,7 @@ class TestUser < Test::Unit::TestCase
   end
 
   def test_tweet()
-    tweet = @user.tweet("Making my own twitter backend. #coding #ruby")
+    tweet = @user.tweet("Making my own twitter backend. #coding #ruby", @tweet_model)
     assert_equal("Making my own twitter backend. #coding #ruby", tweet.text, "Testing tweet text.")
     assert_equal("test", tweet.user, "Testing tweet user handle.")
     assert_equal(Set.new(["coding", "ruby"]), tweet.tags, "Testing tweet tags.")

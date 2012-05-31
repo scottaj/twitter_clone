@@ -1,7 +1,7 @@
 require_relative '../../lib/user_model'
 require 'test/unit'
 
-class TestUser < Test::Unit::TestCase
+class TestUserModel < Test::Unit::TestCase
   def setup()
     @user_1 = User.new("test")
     @user_2 = User.new("jimBoB")
