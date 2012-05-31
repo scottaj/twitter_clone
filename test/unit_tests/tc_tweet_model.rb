@@ -11,7 +11,7 @@ class TestTweetModel < Test::Unit::TestCase
     connection = Mongo::Connection.new.db("testdb")
     collection = "testCollTw"
     @user_model = UserModel.new(connection, "test")
-    @tweet_model = TweetModel.new(connection, collection, @user_model)
+    @tweet_model = TweetModel.new(connection, collection)
     @db_conn = connection.collection(collection)
   end
 
