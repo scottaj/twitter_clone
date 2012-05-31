@@ -1,7 +1,13 @@
 require 'bundler/setup'
 require 'sinatra'
 
-# Main routing table for application.
-get '/' do
+
+class TwitterClone< Sinatra::Base
+  # Main routing table for application.
+  get '/' do
   
+  end
 end
+
+
+TwitterClone.run if __FILE__ == $0
