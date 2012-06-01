@@ -8,9 +8,15 @@ require_relative 'lib/tweet'
 require_relative 'lib/user_model'
 require_relative 'lib/tweet_model'
 
-
+##
+# Main application class for sinatra application.
 class TwitterClone < Sinatra::Base
 
+  ##
+  # ==App configuration
+  # - Enables sessions
+  # - Creates database connection and uses that to create models
+  # for tweets and users.
   configure do
     enable :sessions
     
@@ -28,10 +34,11 @@ class TwitterClone < Sinatra::Base
 
     db_conn.authenticate(db_settings[:username], db_settings[:password]) if db_settings[:username]
 
-    @user_model = UserModel.new(db_conn, db_settings[:user_collection])
-    @tweet_model = TweetModel.new(db_conn, db_settings[:tweet_collection])
+    @@user_model = UserModel.new(db_conn, db_settings[:user_collection])
+    @@tweet_model = TweetModel.new(db_conn, db_settings[:tweet_collection])
   end
-  
+
+  ##
   # Main routing table for application.
   before /^(?!\/login).*$/i do
     redirect '/login' unless session[:user]
