@@ -42,7 +42,9 @@ class UserModel
   # ===ARGS:
   # - handle should be a string of the users handle. Case is not relevent.
   def user_exists?(handle)
-    return @connection.find_one("_id" => /\A#{handle}\z/i)
+    result = @connection.find_one("_id" => /^#{handle}$/i)
+    return result["_id"] if result
+    return nil
   end
     
   ##

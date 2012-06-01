@@ -38,9 +38,9 @@ class TestUserModel < Test::Unit::TestCase
 
   def test_user_exists?()
     @user_model.save_user(@user_1)
-    assert(@user_model.user_exists?("test"), "Testing that we find the exact user string.")
-    assert(@user_model.user_exists?("TeSt"), "Testing that we still find the user string if the case is mixed up.")
-    assert_equal(false, @user_model.user_exists?("Crazy"), "Testing that an utterly wrong username returns false.")
-    assert_equal(false, @user_model.user_exists?("retested"), "testing that a string with a username in it will not return true.")
+    assert_equal("test", @user_model.user_exists?("test"), "Testing that we find the exact user string.")
+    assert_equal("test", @user_model.user_exists?("TeSt"), "Testing that we still find the user string if the case is mixed up.")
+    assert_equal(nil, @user_model.user_exists?("Crazy"), "Testing that an utterly wrong username returns false.")
+    assert_equal(nil, @user_model.user_exists?("retested"), "testing that a string with a username in it will not return true.")
   end
 end
