@@ -40,7 +40,7 @@ class TwitterClone < Sinatra::Base
 
   ##
   # Main routing table for application.
-  before /^(?!\/login).*$/i do
+  before /^(?!\/(login|signup)).*$/i do
     redirect '/login' unless session[:user]
   end
   
@@ -50,8 +50,15 @@ class TwitterClone < Sinatra::Base
   end
 
   get '/login' do
-    page_title = "Login"
-    slim :login, locals: {page_title: page_title}
+    slim :login, locals: {page_title: "Login", message: ""}
+  end
+
+  post '/login' do
+    
+  end
+
+  get '/signup' do
+    
   end
 end
 
