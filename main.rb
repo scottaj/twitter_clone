@@ -63,9 +63,8 @@ class TwitterClone < Sinatra::Base
   end
 
   get '/home' do
-    handle = session[:user]
-    page_user = @@user_model.get_user_by_handle(handle)
-    slim :index, locals: {page_title: session[:user], handle: handle, page_user: page_user}
+    page_user = @@user_model.get_user_by_handle(session[:user])
+    slim :index, locals: {page_title: session[:user], handle: session[:user], page_user: page_user}
   end
 
   get '/users/:handle' do

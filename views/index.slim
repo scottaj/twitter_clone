@@ -1,6 +1,8 @@
 div class="container-fluid"
   div class="row-fluid"
     div class="span8"
-    
+      div class="row_fluid"
+        h1 class="span2" = handle
+
     div class="well span4"
       ==render :slim, :'user_following', locals: {handle: handle, page_user: page_user}
