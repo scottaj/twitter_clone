@@ -59,6 +59,10 @@ class TwitterClone < Sinatra::Base
   end
   
   get '/' do
+    redirect '/home'
+  end
+
+  get '/home' do
     slim :index, locals: {page_title: "Home"}
   end
 
@@ -67,11 +71,27 @@ class TwitterClone < Sinatra::Base
   end
 
   post '/login' do
-    
+    handle = @@user_model.user_exists?(params[:handle])
+    if handle
+      session[:user] = handle
+      redirect '/'
+    else
+      slim :login, locals: {page_title: "Login", message: "User handle not found!"}
+    end
   end
 
   get '/signup' do
-    
+    slim :signup, locals: {page_title: "Sign Up", message: ""}
+  end
+
+  post '/signup' do
+    exists = @@user_model.user_exists?(params[:handle])
+    if exists
+      slim :signup, locals: {page_title: "Sign Up", message: "Selected handle is already in use by someone else!"}
+    else
+      @@user_model.save_user(User.new(params[:handle]))
+      redirect '/'
+    end
   end
 end
 

@@ -1,6 +1,11 @@
-doctype html
-html
-  head
-
-  body
-    p Login Page
+div class="container"
+  div class="row-fluid"
+    form class="well form-horizontal span12" action="/login" method="post"
+      h3 Log In:
+      div class="row-fluid"
+        input type="text" name="handle" class="span3 offset6" placeholder="User Handle"
+      div class="row-fluid"
+        - if message.match(/.+/)
+            div class="alert alert-error span3 offset6" = message
+      div class="row-fluid"
+          button type="submit" class="btn span1 offset6" Go! 
