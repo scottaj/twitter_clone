@@ -1,14 +1,12 @@
 TODO List:
-- Create login page
-  - Empty login page for "get"
-  - Have a link to the signup page.
-  - Have the page "post" back to the login page.
-    - If the login was successful, set session var and
-      redirect to the home page.
-    - If login fails go back to blank login with some sort
-      of failure message.
-- Create new user signup page
-  - Enter just a handle for now and then "post" to the login page 
-    with a message that the user was or wasn't created.
-  - Make sure to validate user creation against already existing user names.
 - Create home page for users
+  - Create partial for a list of tweets.
+  - Figure out how to turn hashtags into links.
+  - Make Tweet form
+- Create pages for other users
+  - use following and tweet list partials.
+- Get Search working
+  - Context sensative, user search for regular string, tag search 
+    if prepended with # character.
+- Get tag pages working
+  - Use tweet list partial
