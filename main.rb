@@ -63,7 +63,13 @@ class TwitterClone < Sinatra::Base
   end
 
   get '/home' do
-    slim :index, locals: {page_title: session[:user]}
+    handle = session[:user]
+    page_user = @@user_model.get_user_by_handle(handle)
+    slim :index, locals: {page_title: session[:user], handle: handle, page_user: page_user}
+  end
+
+  get '/users/:handle' do
+    
   end
 
   get '/login' do
@@ -99,5 +105,7 @@ class TwitterClone < Sinatra::Base
     redirect '/'
   end  
 end
+
+
 
 TwitterClone.run! if __FILE__ == $0
