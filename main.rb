@@ -42,11 +42,24 @@ class TwitterClone < Sinatra::Base
   # Main routing table for application.
   before /^(?!\/(login|signup)).*$/i do
     redirect '/login' unless session[:user]
+    @navbar_option = "/logout"
+    @navbar_text = "Logout"
+  end
+  
+  before "/login" do
+    redirect '/' if session[:user]
+    @navbar_option = "/signup"
+    @navbar_text = "Sign Up"
+  end
+
+  before "/signup" do
+    redirect '/' if session[:user]
+    @navbar_option = "/login"
+    @navbar_text = "Login"
   end
   
   get '/' do
-    page_title = "Home"
-    slim :index, locals: {page_title: page_title}
+    slim :index, locals: {page_title: "Home"}
   end
 
   get '/login' do
