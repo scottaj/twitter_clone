@@ -1,12 +1,5 @@
 TODO List:
-- Create home page for users
-  - Create partial for a list of tweets.
-  - Figure out how to turn hashtags into links.
-  - Make Tweet form
-- Create pages for other users
-  - use following and tweet list partials.
-- Get Search working
-  - Context sensative, user search for regular string, tag search 
-    if prepended with # character.
-- Get tag pages working
-  - Use tweet list partial
+     - Go back to mongoid branch and try to get mongoid subbed in.
+     - Deploy to Heroku
+     - Experiment with ajax instead of page loads.
+     - Make pages perttier and less empty.
