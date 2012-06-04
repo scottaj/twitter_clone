@@ -64,10 +64,23 @@ class TwitterClone < Sinatra::Base
 
   get '/home' do
     page_user = @@user_model.get_user_by_handle(session[:user])
-    slim :index, locals: {page_title: session[:user], handle: session[:user], page_user: page_user}
+    user_tweets = @@tweet_model.get_tweets_for_user(page_user)
+    slim :index, locals: {page_title: session[:user],
+      handle: session[:user],
+      page_user: page_user,
+      user_tweets: user_tweets}
   end
 
+  post '/home' do
+    @@user_model.get_user_by_handle(session[:user]).tweet(params[:tweet_text], @@tweet_model)
+    redirect '/home'
+  end  
+
   get '/users/:handle' do
+    
+  end
+
+  get '/tags/:tag' do
     
   end
 
@@ -102,7 +115,11 @@ class TwitterClone < Sinatra::Base
   get '/logout' do
     session.clear
     redirect '/'
-  end  
+  end
+
+  post '/:id' do
+    
+  end
 end
 
 

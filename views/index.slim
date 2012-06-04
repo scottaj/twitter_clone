@@ -1,8 +1,16 @@
 div class="container-fluid"
   div class="row-fluid"
     div class="span8"
-      div class="row_fluid"
+      div class="row-fluid"
         h1 class="span2" = handle
-
+        form class="well form-horizontal span12" action="/home" method="post"    
+          div class="row-fluid"
+            textarea class="input-xlarge span8" id="textarea" rows="4" name="tweet_text" placeholder="Enter your tweet"
+          div class="row-fluid"
+            button type="submit" class="btn btn-primary span2" Tweet!
+      div class="row-fluid"
+        div class="span2"
+        div class="span6"
+          ==render :slim, :"tweet_list", locals: {title: "#{handle}'s Tweets", tweets: user_tweets}
     div class="well span4"
       ==render :slim, :'user_following', locals: {handle: handle, page_user: page_user}
