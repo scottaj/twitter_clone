@@ -69,6 +69,8 @@
           
           <li><a href="#method-i-follow_user">#follow_user</a></li>
           
+          <li><a href="#method-i-following-3F">#following?</a></li>
+          
           <li><a href="#method-i-tweet">#tweet</a></li>
           
           <li><a href="#method-i-unfollow_user">#unfollow_user</a></li>
@@ -295,6 +297,44 @@ set.</p>
         </div><!-- follow_user-method -->
 
       
+        <div id="following-3F-method" class="method-detail ">
+          <a name="method-i-following-3F"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">following?</span><span
+              class="method-args">(other_user)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>Returns true if user is following other_user, false otherwise.</p>
+
+<h3>ARGS:</h3>
+<ul><li>
+<p>other_user should be a <a href="User.html">User</a> object.</p>
+</li></ul>
+            
+
+            
+            <div class="method-source-code" id="following-3F-source">
+<pre>
+<span class="ruby-comment"># File lib/user.rb, line 70</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">following?</span>(<span class="ruby-identifier">other_user</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@following</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">other_user</span>.<span class="ruby-identifier">handle</span>)
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- following-3F-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- following-3F-method -->
+
+      
         <div id="tweet-method" class="method-detail ">
           <a name="method-i-tweet"></a>
 
@@ -312,7 +352,7 @@ set.</p>
 href="Tweet.html">Tweet</a> object and also saves the tweet using the
 provided model class.</p>
 
-<h3>ARGS</h3>
+<h3>ARGS:</h3>
 <ul><li>
 <p>text should be a string of the tweet’s text.</p>
 </li><li>
