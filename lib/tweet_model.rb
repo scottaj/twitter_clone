@@ -31,11 +31,12 @@ class TweetModel
   # the array.
   #
   # ===ARGS:
-  # - user should be a User object for which to find tweets.
+  # - user should be a User object for which to find tweets or a String
+  # username.
   # - limit should be the maximum number of tweets you want returned.
   # The default limit is 50.
   def get_tweets_for_user(user, limit = 50)
-    result_set = @connection.find("user" => user.handle).sort([["timestamp", -1]]).limit(limit)
+    result_set = @connection.find("user" => user.is_a?(User) ? user.handle : user).sort([["timestamp", -1]]).limit(limit)
     tweets = []
 
     result_set.each {|result| tweets << Tweet.new(result["text"], user, result["timestamp"], result["tags"])}
@@ -61,5 +62,20 @@ class TweetModel
     end
 
     return tweets
+  end
+
+  ##
+  # Get up to limit  tweets from all of a user's followers sorted by most
+  # recent tweets.
+  #
+  # ===ARGS:
+  # - User should be the User object from whose followers you want tweets.
+  # - limit should be the maximum number of tweets you want returned.
+  # The default limit is 50.
+  def get_tweets_from_followers(user, limit = 50)
+    tweets = []
+    user.following.each {|followed| tweets = tweets + self.get_tweets_for_user(followed)}
+    tweets.sort! {|t1, t2| t1.timestamp <=> t2.timestamp}
+    return tweets[0...limit]
   end
 end

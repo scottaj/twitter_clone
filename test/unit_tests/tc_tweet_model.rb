@@ -6,6 +6,8 @@ require 'test/unit'
 class TestTweetModel < Test::Unit::TestCase
   def setup()
     @user = User.new("test")
+    @following_1 = User.new("Deedle")
+    @following_2 = User.new("Dum")
     text_1 = "Got super #drunk last night! #partyrocker #brolife"
     @tweet_1 = Tweet.new(text_1, @user)
     connection = Mongo::Connection.new.db("testdb")
@@ -33,7 +35,7 @@ class TestTweetModel < Test::Unit::TestCase
     tweet_1 = @user.tweet("Trying out web development. #ruby #sinatra", @tweet_model)
     sleep(3)
     tweet_2 = @user.tweet("#mongo seems like a cool database.", @tweet_model)
-    sleep(6)
+    sleep(2)
     tweet_3 = @user.tweet("Wazzzzzzup!", @tweet_model)
 
     results = @tweet_model.get_tweets_for_user(@user)
@@ -51,7 +53,7 @@ class TestTweetModel < Test::Unit::TestCase
     tweet_1 = @user.tweet("Hello, world! #hashtag", @tweet_model)
     sleep(4)
     tweet_2 = @user.tweet("Another interesting tweet. #twitter", @tweet_model)
-    sleep(2)
+    sleep(1)
     tweet_3 = @user.tweet("One more for the road. #hashtag #twitter", @tweet_model)
 
     results = @tweet_model.get_tweets_for_tag("hashtag")
@@ -62,5 +64,18 @@ class TestTweetModel < Test::Unit::TestCase
 
     results = @tweet_model.get_tweets_for_tag("derp")
     assert_equal([], results, "Testing that a non-existant hashtag returns an empty result set.")
+  end
+
+  def test_get_tweets_from_followers()
+    @user.follow_user(@following_1)
+    @user.follow_user(@following_2)
+    t1 = @following_1.tweet("Derp", @tweet_model)
+    sleep(2)
+    t2 = @following_2.tweet("Derpity derp", @tweet_model)
+    sleep(3)
+    t3 = @following_1.tweet("Dumbity derp derp", @tweet_model)
+    assert_equal([t1, t2, t3], @tweet_model.get_tweets_from_followers(@user), "Testing retrieving tweets")
+    assert_equal([t1], @tweet_model.get_tweets_from_followers(@user, 1), "Testing with a limit")
+    assert_equal([], @tweet_model.get_tweets_from_followers(@following_1), "Testing a user not following anyone.")
   end
 end
