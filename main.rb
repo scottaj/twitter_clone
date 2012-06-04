@@ -121,6 +121,18 @@ class TwitterClone < Sinatra::Base
     end
     @@user_model.save_user(user)
     redirect "/#{session[:user_page]}"
+  end
+
+  get '/search' do
+    query = params[:searchq][/\S+/]
+    if query[/#.+/]
+      query = query[/[^#]+/]
+      redirect "/tags/#{query}" if @@tweet_model.get_tweets_for_tag(query, 1).length == 1
+      slim :bad_search, locals: {page_title: "No Results Found", query: "##{query}"}
+    else
+      redirect "/users/#{query}" if @@user_model.user_exists?(query)
+      slim :bad_search, locals: {page_title: "No Results Found", query: "User #{query}"}
+    end
   end  
   
   get '/users/:handle' do
@@ -148,7 +160,7 @@ class TwitterClone < Sinatra::Base
       tweets = @@tweet_model.get_tweets_for_tag(session[:tag_page])
       slim :tag, locals: {page_title: params[:id], tag: "##{params[:id]}", tweets: tweets}
     else
-      not_found()
+      redirect "/search?searchq=#{params[:id]}"
     end
   end
 end
