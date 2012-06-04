@@ -51,7 +51,7 @@ class User
   # Tweet object and also saves the tweet using the
   # provided model class.
   #
-  # ===ARGS
+  # ===ARGS:
   # - text should be a string of the tweet's text.
   # - model should be a storage model class that knows
   # how to save a tweet.
@@ -59,5 +59,15 @@ class User
     tweet = Tweet.new(text, self)
     model.save_tweet(tweet)
     return tweet
+  end
+
+  ##
+  # Returns true if user is following other_user, false
+  # otherwise.
+  #
+  # ===ARGS:
+  # - other_user should be a User object.
+  def following?(other_user)
+    return @following.include?(other_user.handle)
   end
 end

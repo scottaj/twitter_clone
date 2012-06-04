@@ -76,14 +76,6 @@ class TwitterClone < Sinatra::Base
     redirect '/home'
   end  
 
-  get '/users/:handle' do
-    
-  end
-
-  get '/tags/:tag' do
-    
-  end
-
   get '/login' do
     slim :login, locals: {page_title: "Login", message: ""}
   end
@@ -117,8 +109,41 @@ class TwitterClone < Sinatra::Base
     redirect '/'
   end
 
-  post '/:id' do
+  post '/follow' do
+    user = @@user_model.get_user_by_handle(session[:user])
+    other_user = @@user_model.get_user_by_handle(session[:user_page])
+    if user.following?(other_user)
+      user.unfollow_user(other_user)     
+    else
+      user.follow_user(other_user)
+    end
+    @@user_model.save_user(user)
+    redirect "/#{session[:user_page]}"
+  end  
+  
+  get '/users/:handle' do
+    handle = @@user_model.user_exists?(params[:handle])
+    redirect '/home' if handle == session[:user]
+    session[:user_page] = handle
+    session[:tag_page] = nil
+    redirect "/#{handle}"
+  end
+
+  get '/tags/:tag' do
     
+  end
+
+  get '/:id' do
+    if session[:user_page] == params[:id]
+      handle = page_user = @@user_model.user_exists?(params[:id])
+      page_user = @@user_model.get_user_by_handle(handle)
+      tweets = @@tweet_model.get_tweets_from_followers(page_user)
+      following = @@user_model.get_user_by_handle(session[:user]).following?(page_user)
+      slim :user, locals: {page_title: handle, handle: handle, page_user: page_user, tweets: tweets, following: following}
+    elsif session[:tag_page] == params[:id]
+    else
+      not_found()
+    end
   end
 end
 
