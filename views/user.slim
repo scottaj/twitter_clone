@@ -3,7 +3,7 @@ div class="container-fluid"
     div class="span8"
       br
       div class="row-fluid"
-        h1 class="span2" = handle        
+        h1 class="span#{2 + handle.length / 7}" = handle        
         form class="form-inline span6" action="/follow" method="post"
           button type="submit" class="btn #{following ? "btn-warning" : "btn-success"} btn-large" = following ? "Unfollow" : "Follow"
       div class="row-fluid"

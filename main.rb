@@ -132,7 +132,9 @@ class TwitterClone < Sinatra::Base
   end
 
   get '/tags/:tag' do
-    
+    session[:tag_page] = params[:tag][/[^#]+/]
+    session[:user_page] = nil
+    redirect "/#{params[:tag]}"
   end
 
   get '/:id' do
@@ -142,7 +144,9 @@ class TwitterClone < Sinatra::Base
       tweets = @@tweet_model.get_tweets_for_user(page_user)
       following = @@user_model.get_user_by_handle(session[:user]).following?(page_user)
       slim :user, locals: {page_title: handle, handle: handle, page_user: page_user, tweets: tweets, following: following}
-    elsif session[:tag_page] == params[:id]
+    elsif session[:tag_page] == params[:id][/[^#]+/]
+      tweets = @@tweet_model.get_tweets_for_tag(session[:tag_page])
+      slim :tag, locals: {page_title: params[:id], tag: "##{params[:id]}", tweets: tweets}
     else
       not_found()
     end

@@ -1,0 +1,10 @@
+div class="container-fluid"
+  div class="row-fluid"
+    div class="span12"
+      br
+      div class="row-fluid"
+        h1 class="span2" = tag                
+      div class="row-fluid"
+        div class="span4"
+        div class="span10"
+          ==render :slim, :"tweet_list", locals: {title: "Tweets with tag #{tag}", tweets: tweets}    
