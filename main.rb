@@ -65,10 +65,12 @@ class TwitterClone < Sinatra::Base
   get '/home' do
     page_user = @@user_model.get_user_by_handle(session[:user])
     user_tweets = @@tweet_model.get_tweets_for_user(page_user)
+    followed_tweets = @@tweet_model.get_tweets_from_followers(page_user)
     slim :index, locals: {page_title: session[:user],
       handle: session[:user],
       page_user: page_user,
-      user_tweets: user_tweets}
+      user_tweets: user_tweets,
+      followed_tweets: followed_tweets}
   end
 
   post '/home' do
@@ -137,7 +139,7 @@ class TwitterClone < Sinatra::Base
     if session[:user_page] == params[:id]
       handle = page_user = @@user_model.user_exists?(params[:id])
       page_user = @@user_model.get_user_by_handle(handle)
-      tweets = @@tweet_model.get_tweets_from_followers(page_user)
+      tweets = @@tweet_model.get_tweets_for_user(page_user)
       following = @@user_model.get_user_by_handle(session[:user]).following?(page_user)
       slim :user, locals: {page_title: handle, handle: handle, page_user: page_user, tweets: tweets, following: following}
     elsif session[:tag_page] == params[:id]

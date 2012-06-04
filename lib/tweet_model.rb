@@ -75,7 +75,7 @@ class TweetModel
   def get_tweets_from_followers(user, limit = 50)
     tweets = []
     user.following.each {|followed| tweets = tweets + self.get_tweets_for_user(followed)}
-    tweets.sort! {|t1, t2| t1.timestamp <=> t2.timestamp}
+    tweets.sort! {|t1, t2| t2.timestamp <=> t1.timestamp}
     return tweets[0...limit]
   end
 end

@@ -1,6 +1,7 @@
 div class="container-fluid"
   div class="row-fluid"
-    div class="span8"    
+    div class="span8"
+      br
       div class="row-fluid"
         h1 class="span2" = handle        
         form class="form-inline span6" action="/follow" method="post"
@@ -8,6 +9,6 @@ div class="container-fluid"
       div class="row-fluid"
         div class="span2"
         div class="span6"
-          
+          ==render :slim, :"tweet_list", locals: {title: "#{handle}'s Tweets", tweets: tweets}
     div class="well span4"
       ==render :slim, :'user_following', locals: {handle: handle, page_user: page_user}
