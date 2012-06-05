@@ -34,4 +34,9 @@ class UserModel
   def unfollow_user(follower, following)
     User.where(handle: follower).pull(following: following)
   end
+
+  def following?(follower, following)
+    return true if User.where(handle: follower, following: following).first
+    return false
+  end
 end
