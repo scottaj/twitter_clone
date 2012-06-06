@@ -2,5 +2,5 @@ div class="row-fluid"
   h2 = title  
 - tweets.each do |tweet|
   div class="row-fluid well"
-    h4 "<a href=/users/#{tweet.user}>#{tweet.user}</a> - #{tweet.timestamp.strftime("%l:%M %p - %a, %B%e, %Y")}"
+    h4 == "<a href=/users/#{tweet.user}>#{tweet.user}</a> - #{tweet.timestamp.strftime("%l:%M %p - %a, %B%e, %Y")}"
     p == tweet.text.gsub(/#\S+/) {|m| "<a href=\"/tags/#{m[/[^#]+/]}\">#{m}</a>"}
