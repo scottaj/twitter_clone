@@ -20,10 +20,14 @@ class TwitterClone < Sinatra::Base
     enable :sessions
     
     Mongoid.configure do |config|
-      uri = URI.parse(ENV['MONGOHQ_URL'])
-      conn = Mongo::Connection.from_uri(ENV['MONGOHQ_URL'])
-      db = conn.db(uri.path.gsub(/^\//, ''))
-      config.master = db
+      if ENV['MONGOHQ_URL']
+        uri = URI.parse(ENV['MONGOHQ_URL'])
+        conn = Mongo::Connection.from_uri(ENV['MONGOHQ_URL'])
+        db = conn.db(uri.path.gsub(/^\//, ''))
+        config.master = db
+      else
+        config.master = Mongo::Connection.new.db("rcr_app")
+      end
     end
 
     @@user_model = UserModel.new()
