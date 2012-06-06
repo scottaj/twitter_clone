@@ -65,6 +65,7 @@ class TwitterClone < Sinatra::Base
     slim :index, locals: {page_title: session[:user],
       handle: session[:user],
       page_user: page_user,
+      offset: request.cookies["offset"],
       user_tweets: user_tweets,
       followed_tweets: followed_tweets}
   end
@@ -148,10 +149,18 @@ class TwitterClone < Sinatra::Base
       page_user = @@user_model.get_user_by_handle(handle)
       tweets = @@tweet_model.get_tweets_for_user(handle)
       following = @@user_model.following?(session[:user], handle)
-      slim :user, locals: {page_title: handle, handle: handle, page_user: page_user, tweets: tweets, following: following}
+      slim :user, locals: {page_title: handle,
+        handle: handle,
+        page_user: page_user,
+        offset: request.cookies["offset"],
+        tweets: tweets,
+        following: following}
     elsif session[:tag_page] == params[:id][/[^#]+/]
       tweets = @@tweet_model.get_tweets_for_tag(session[:tag_page])
-      slim :tag, locals: {page_title: params[:id], tag: "##{params[:id]}", tweets: tweets}
+      slim :tag, locals: {page_title: params[:id],
+        tag: "##{params[:id]}",
+        offset: request.cookies["offset"],
+        tweets: tweets}
     else
       redirect "/search?searchq=#{params[:id]}"
     end

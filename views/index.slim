@@ -12,10 +12,10 @@ div class="container-fluid"
       div class="row-fluid"
         div class="span2"
         div class="span6"
-          ==render :slim, :"tweet_list", locals: {title: "What's Happening", tweets: followed_tweets}
+          ==render :slim, :"tweet_list", locals: {title: "What's Happening", offset: offset, tweets: followed_tweets}
       div class="row-fluid"      
         div class="span2"
         div class="span6"        
-          ==render :slim, :"tweet_list", locals: {title: "My Tweets", tweets: user_tweets}
+          ==render :slim, :"tweet_list", locals: {title: "My Tweets", offset: offset, tweets: user_tweets}
     div class="well span4"
       ==render :slim, :'user_following', locals: {handle: handle, page_user: page_user}

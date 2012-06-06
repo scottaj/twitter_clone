@@ -7,7 +7,7 @@ class TweetModel
   def tweet(text, user)
     tags = []
     text.scan(/#\S+/) {|match| tags << match[/[^#]+/]}
-    Tweet.create(text: text, user: user, timestamp: Time.now.getutc, tags: tags)
+    Tweet.create(text: text, user: user, timestamp: Time.now.utc, tags: tags)
   end
 
   

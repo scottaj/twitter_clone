@@ -1,3 +1,7 @@
+javascript:
+  var d = new Date()
+  var o = (d.getHours() - d.getUTCHours()) * 60 * 60
+  document.cookie = "offset="+o
 div class="container-fluid"
   div class="row-fluid"
     form class="well form-horizontal span12" action="/login" method="post"
