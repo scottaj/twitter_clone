@@ -21,13 +21,9 @@ class TwitterClone < Sinatra::Base
     
     Mongoid.configure do |config|
       uri = URI.parse(ENV['MONGOHQ_URL'])
-      host = uri.host
-      port = uri.port
-      user = uri.user
-      password = uri.password
-      db = Mongo::Connection.new(host, port).db(uri.path.gsub(/^\//, ''))
-      db.authenticate(user, password)
-      config.master = db     
+      conn = Mongo::Connection.from_uri(ENV['MONGOHQ_URL'])
+      db = conn.db(uri.path.gsub(/^\//, ''))
+      config.master = db
     end
 
     @@user_model = UserModel.new()
