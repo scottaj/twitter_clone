@@ -1,38 +1,9 @@
-require 'bundler/setup'
-require_relative 'user'
-require 'mongo'
+require_relative 'user_m'
 
 # Class for storing and retrieving User objects from a mongo
 # database.
 class UserModel
 
-  ##
-  # Create a new user model.
-  #
-  # ===ARGS:
-  # - connection should be a Mongo database connection.
-  # - collection_name should be the name of a collection within the database.
-  def initialize(connection, collection_name)
-    @connection = connection.collection(collection_name)
-  end
-
-  ##
-  # Save a user object to a mongo database.
-  #
-  # If a user does not exist in the database they are added, if they
-  # do exist then the existing record is modified.
-  #
-  # ===ARGS:
-  # - user should be a user object to be saved.
-  def save_user(user)
-    if @connection.find_one("_id" => user.handle)
-      puts user.modified
-      @connection.update({"_id" => user.handle}, {"following" => user.following.to_a}) if user.modified
-    else
-      @connection.insert("_id" => user.handle, "following" => user.following.to_a)
-    end
-    user.modified = false
-  end
 
   ##
   # Searches for a user handle in the database, uses a regex which
@@ -42,9 +13,9 @@ class UserModel
   # ===ARGS:
   # - handle should be a string of the users handle. Case is not relevent.
   def user_exists?(handle)
-    result = @connection.find_one("_id" => /^#{handle}$/i)
-    return result["_id"] if result
-    return nil
+    user = User.where(handle: /^#{handle}$/i).first
+    return user.handle if user
+    return user
   end
     
   ##
@@ -55,7 +26,19 @@ class UserModel
   # ===ARGS:
   # - handle should be a string of the users handle.
   def get_user_by_handle(handle)
-    record = @connection.find_one("_id" => handle)
-    return User.new(record["_id"], record["following"]) if record
+    return User.where(handle: handle).first
+  end
+
+  def follow_user(follower, following)
+    User.where(handle: follower).first.push(:following, following)
+  end
+
+  def unfollow_user(follower, following)
+    User.where(handle: follower).first.pull(:following, following)
+  end
+
+  def following?(follower, following)
+    return true if User.where(handle: follower, following: following).first
+    return false
   end
 end

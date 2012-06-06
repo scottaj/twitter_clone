@@ -1,45 +1,30 @@
-require 'bundler/setup'
-require_relative 'tweet'
-require 'mongo'
+require_relative 'tweet_m'
+require_relative 'user_m'
 
 # Model class for saving and loading tweets to a mongo database.
 class TweetModel
 
-  ##
-  # Creates a new TweetModel object.
-  #
-  # ===ARGS:
-  # - connection should be a Mongo database connection.
-  # - collection_name should be the name of a collection within the database.
-  def initialize(connection, collection_name)
-    @connection = connection.collection(collection_name)
+  def tweet(text, user)
+    tags = []
+    text.scan(/#\S+/) {|match| tags << match[/[^#]+/]}
+    Tweet.create(text: text, user: user, timestamp: Time.now, tags: tags)
   end
 
-  ##
-  # Saves a Tweet object to the database.
-  #
-  # ===ARGS:
-  # - tweet should be a tweet object to be saved.
-  def save_tweet(tweet)
-    @connection.insert("text" => tweet.text, "user" => tweet.user, "timestamp" => tweet.timestamp.to_i, "tags" => tweet.tags.to_a)
-  end
-
+  
   ##
   # Returns a collection of tweets created by a given user
-  # as an array. The tweets are stored in the array in descending
+  # as an enumerable. The tweets are stored in the array in descending
   # order by timestamp, so the most recent tweets will be first in
-  # the array.
+  # the eumerable.
   #
   # ===ARGS:
   # - user should be a User object for which to find tweets or a String
   # username.
   # - limit should be the maximum number of tweets you want returned.
   # The default limit is 50.
-  def get_tweets_for_user(user, limit = 50)
-    result_set = @connection.find("user" => user.is_a?(User) ? user.handle : user).sort([["timestamp", -1]]).limit(limit)
+  def get_tweets_for_user(handle, limit = 50)
     tweets = []
-
-    result_set.each {|result| tweets << Tweet.new(result["text"], user, result["timestamp"], result["tags"])}
+    Tweet.where(user: handle).desc(:timestamp).limit(limit).each {|tweet| tweets << tweet}
     return tweets
   end
 
@@ -54,13 +39,8 @@ class TweetModel
   # - limit should be the maximum number of tweets you want returned.
   # The default limit is 50.
   def get_tweets_for_tag(tag, limit = 50)
-    result_set = @connection.find("tags" => tag).sort([["timestamp", -1]]).limit(limit)
     tweets = []
-
-    result_set.each do |result|
-      tweets << Tweet.new(result["text"], result["user"], result["timestamp"], result["tags"])
-    end
-
+    Tweet.where(tags: tag).desc(:timestamp).limit(limit).each {|tweet| tweets << tweet}
     return tweets
   end
 
@@ -72,9 +52,11 @@ class TweetModel
   # - User should be the User object from whose followers you want tweets.
   # - limit should be the maximum number of tweets you want returned.
   # The default limit is 50.
-  def get_tweets_from_followers(user, limit = 50)
+  def get_tweets_from_followers(handle, limit = 50)
     tweets = []
-    user.following.each {|followed| tweets = tweets + self.get_tweets_for_user(followed)}
+    User.where(handle: handle).first.following.each do |followed|
+      tweets = tweets + self.get_tweets_for_user(followed)
+    end
     tweets.sort! {|t1, t2| t2.timestamp <=> t1.timestamp}
     return tweets[0...limit]
   end

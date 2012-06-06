@@ -1,43 +1,67 @@
+require 'bundler/setup'
+require 'mongoid'
+
+if __FILE__ == $0
+  Mongoid.configure do |config|
+    name = "rcr_app_testing"
+    host = "localhost"
+    config.master = Mongo::Connection.new.db(name)
+  end
+end
+
 require_relative '../../lib/user_model'
 require 'test/unit'
 
 class TestUserModel < Test::Unit::TestCase
   def setup()
-    @user_1 = User.new("test")
-    @user_2 = User.new("jimBoB")
-    connection = Mongo::Connection.new.db("testdb")
-    collection = "testColl"
-    @user_model = UserModel.new(connection, collection)
-    @db_conn = connection.collection(collection)
+    @user_model = UserModel.new()
   end
 
   def teardown()
-    @db_conn.remove()
+    Mongoid.purge!
   end
 
-  def test_save_user()
-    @user_model.save_user(@user_1)
-    assert(@db_conn.find_one("_id" => "test"), "Testing that user was added to database.")
+  def test_follow_user()
+    User.create(handle: "u1", following: [])
+    User.create(handle: "u2", following: [])
+    User.create(handle: "u3", following: [])
+    assert_equal([], User.where(handle: "u1").first.following, "testing user not following anyone.")
+    @user_model.follow_user("u1", "u2")
+    assert_equal(["u2"], User.where(handle: "u1").first.following, "testing user following someone.")
+    @user_model.follow_user("u1", "u3")
+    assert_equal(["u2", "u3"], User.where(handle: "u1").first.following, "testing user following a couple people.")
   end
 
-  def test_update_user()
-    @user_model.save_user(@user_1)
-    @user_1.follow_user(@user_2)
-    @user_model.save_user(@user_1)
-    assert_equal(1, @db_conn.find("_id" => "test").count, "Making sure there is only one record for a user.")
-    record = @db_conn.find_one("_id" => "test")
-    assert_equal(@user_1.following, Set.new(record["following"]), "Testing that update works correctly.")
+  def test_unfollow_user()
+    User.create(handle: "u1", following: ["u2", "u3"])
+    User.create(handle: "u2", following: [])
+    User.create(handle: "u3", following: [])
+    assert_equal(["u2", "u3"], User.where(handle: "u1").first.following, "testing user starts with followers.")
+    @user_model.unfollow_user("u1", "u2")
+    assert_equal(["u3"], User.where(handle: "u1").first.following, "testing removing a follower.")
+    @user_model.unfollow_user("u1", "u2")
+    assert_equal(["u3"], User.where(handle: "u1").first.following, "testing removing a non-existant follower.")
+    @user_model.unfollow_user("u1", "u3")
+    assert_equal([], User.where(handle: "u1").first.following, "testing removing all followers.")
+  end
+
+  def test_following()
+    User.create(handle: "u1", following: ["u2", "u3"])
+    User.create(handle: "u2", following: [])
+    User.create(handle: "u3", following: [])
+    assert(@user_model.following?("u1", "u2"), "Testing a user that is being followed.")
+    assert_equal(false, @user_model.following?("u1", "u4"), "Testing a user that is not being followed")
   end
 
   def test_get_user_by_handle()
-    @user_model.save_user(@user_2)
-    reconstruction = @user_model.get_user_by_handle("jimBoB")
-    assert_equal(@user_2.handle, reconstruction.handle, "Testing that handle reconstructs.")
-    assert_equal(@user_2.following, reconstruction.following, "Testing that following array reconstructs.")
+    User.create(handle: "u1", following: [])
+    reconstruction = @user_model.get_user_by_handle("u1")
+    assert_equal("u1", reconstruction.handle, "Testing that handle reconstructs.")
+    assert_equal([], reconstruction.following, "Testing that following array reconstructs.")
   end
 
   def test_user_exists?()
-    @user_model.save_user(@user_1)
+    User.create(handle: "test", following: [])
     assert_equal("test", @user_model.user_exists?("test"), "Testing that we find the exact user string.")
     assert_equal("test", @user_model.user_exists?("TeSt"), "Testing that we still find the user string if the case is mixed up.")
     assert_equal(nil, @user_model.user_exists?("Crazy"), "Testing that an utterly wrong username returns false.")
