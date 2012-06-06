@@ -153,5 +153,7 @@ class TwitterClone < Sinatra::Base
 end
 
 
-
-TwitterClone.run! if __FILE__ == $0
+if __FILE__ == $0
+  port = `echo $PORT`.to_i
+  TwitterClone.run! :port => port > 0 ? port : 4567
+end
