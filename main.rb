@@ -1,10 +1,8 @@
 require 'bundler/setup'
 require 'sinatra'
 require 'slim'
-require 'mongo'
+require 'mongoid'
 require 'yaml'
-require_relative 'lib/user'
-require_relative 'lib/tweet'
 require_relative 'lib/user_model'
 require_relative 'lib/tweet_model'
 
@@ -20,22 +18,14 @@ class TwitterClone < Sinatra::Base
   configure do
     enable :sessions
     
-    db_settings = YAML::load(File.open('./db.conf', 'r'))
-
-    if db_settings[:hostname] or db_settings[:port]
-      if db_settings[:port]
-        db_conn = Mongo::Connection.new(db_settings[:hostname], db_settings[:port]).db(db_settings[:database])
-      else
-        db_conn = Mongo::Connection.new(db_settings[:hostname]).db(db_settings[:database])
-      end
-    else
-      db_conn = Mongo::Connection.new.db(db_settings[:database])
+    Mongoid.configure do |config|
+      name = "rcr_app"
+      host = "localhost"
+      config.master = Mongo::Connection.new.db(name)
     end
 
-    db_conn.authenticate(db_settings[:username], db_settings[:password]) if db_settings[:username]
-
-    @@user_model = UserModel.new(db_conn, db_settings[:user_collection])
-    @@tweet_model = TweetModel.new(db_conn, db_settings[:tweet_collection])
+    @@user_model = UserModel.new()
+    @@tweet_model = TweetModel.new()
   end
 
   ##
@@ -64,8 +54,8 @@ class TwitterClone < Sinatra::Base
 
   get '/home' do
     page_user = @@user_model.get_user_by_handle(session[:user])
-    user_tweets = @@tweet_model.get_tweets_for_user(page_user)
-    followed_tweets = @@tweet_model.get_tweets_from_followers(page_user)
+    user_tweets = @@tweet_model.get_tweets_for_user(session[:user])
+    followed_tweets = @@tweet_model.get_tweets_from_followers(session[:user])
     slim :index, locals: {page_title: session[:user],
       handle: session[:user],
       page_user: page_user,
@@ -74,7 +64,7 @@ class TwitterClone < Sinatra::Base
   end
 
   post '/home' do
-    @@user_model.get_user_by_handle(session[:user]).tweet(params[:tweet_text], @@tweet_model)
+    @@tweet_model.tweet(params[:tweet_text], session[:user])
     redirect '/home'
   end  
 
@@ -101,7 +91,7 @@ class TwitterClone < Sinatra::Base
     if exists
       slim :signup, locals: {page_title: "Sign Up", message: "Selected handle is already in use by someone else!"}
     else
-      @@user_model.save_user(User.new(params[:handle]))
+      User.create(handle: params[:handle], following: [])
       redirect '/'
     end
   end
@@ -112,14 +102,11 @@ class TwitterClone < Sinatra::Base
   end
 
   post '/follow' do
-    user = @@user_model.get_user_by_handle(session[:user])
-    other_user = @@user_model.get_user_by_handle(session[:user_page])
-    if user.following?(other_user)
-      user.unfollow_user(other_user)     
+    if @@user_model.following?(session[:user], session[:user_page])
+      @@user_model.unfollow_user(session[:user], session[:user_page])
     else
-      user.follow_user(other_user)
+      @@user_model.follow_user(session[:user], session[:user_page])
     end
-    @@user_model.save_user(user)
     redirect "/#{session[:user_page]}"
   end
 
@@ -153,8 +140,8 @@ class TwitterClone < Sinatra::Base
     if session[:user_page] == params[:id]
       handle = page_user = @@user_model.user_exists?(params[:id])
       page_user = @@user_model.get_user_by_handle(handle)
-      tweets = @@tweet_model.get_tweets_for_user(page_user)
-      following = @@user_model.get_user_by_handle(session[:user]).following?(page_user)
+      tweets = @@tweet_model.get_tweets_for_user(handle)
+      following = @@user_model.following?(session[:user], handle)
       slim :user, locals: {page_title: handle, handle: handle, page_user: page_user, tweets: tweets, following: following}
     elsif session[:tag_page] == params[:id][/[^#]+/]
       tweets = @@tweet_model.get_tweets_for_tag(session[:tag_page])

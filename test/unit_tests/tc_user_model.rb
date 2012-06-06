@@ -1,12 +1,10 @@
 require 'bundler/setup'
 require 'mongoid'
 
-if __FILE__ == $0
-  Mongoid.configure do |config|
-    name = "rcr_app_testing"
-    host = "localhost"
-    config.master = Mongo::Connection.new.db(name)
-  end
+Mongoid.configure do |config|
+  name = "rcr_app_testing"
+  host = "localhost"
+  config.master = Mongo::Connection.new.db(name)
 end
 
 require_relative '../../lib/user_model'
