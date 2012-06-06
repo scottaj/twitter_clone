@@ -3,6 +3,7 @@ require 'sinatra'
 require 'slim'
 require 'mongoid'
 require 'yaml'
+require 'uri'
 require_relative 'lib/user_model'
 require_relative 'lib/tweet_model'
 
@@ -19,9 +20,14 @@ class TwitterClone < Sinatra::Base
     enable :sessions
     
     Mongoid.configure do |config|
-      name = "rcr_app"
-      host = "localhost"
-      config.master = Mongo::Connection.new.db(name)
+      uri = URI.parse(ENV['MONGOHQ_URL'])
+      host = uri.host
+      port = uri.port
+      user = uri.user
+      password = uri.password
+      db = Mongo::Connection.new(host, port).db(uri.path.gsub(/^\//, ''))
+      db.authenticate(user, password)
+      config.master = db     
     end
 
     @@user_model = UserModel.new()
