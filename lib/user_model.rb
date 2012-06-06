@@ -13,7 +13,9 @@ class UserModel
   # ===ARGS:
   # - handle should be a string of the users handle. Case is not relevent.
   def user_exists?(handle)
-    return User.where(handle: /^#{handle}$/i).first.handle
+    user = User.where(handle: /^#{handle}$/i).first
+    return user.handle if user
+    return user
   end
     
   ##
@@ -28,11 +30,11 @@ class UserModel
   end
 
   def follow_user(follower, following)
-    User.where(handle: follower).push(following: following)
+    User.where(handle: follower).first.push(:following, following)
   end
 
   def unfollow_user(follower, following)
-    User.where(handle: follower).pull(following: following)
+    User.where(handle: follower).first.pull(:following, following)
   end
 
   def following?(follower, following)
