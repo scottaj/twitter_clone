@@ -143,6 +143,25 @@ class TwitterClone < Sinatra::Base
     redirect "/#{params[:tag]}"
   end
 
+  post '/tweet' do
+    @@tweet_model.tweet(params[:tweet_text], session[:user])
+    slim :tweet_list, layout: false, locals: {title: "My Tweets",
+      id: "user",
+      offset: request.cookies["offset"],
+      tweets: @@tweet_model.get_tweets_for_user(session[:user])}
+  end
+
+  post '/check' do
+    
+  end
+
+  post '/update' do
+    slim :tweet_list, layout: false, locals: {title: "What is Happening",
+      id: "tweets"
+      offset: request.cookies["offset"],
+      tweets: @@tweet_model.get_tweets_from_followers(session[:user])}
+  end
+
   get '/:id' do
     if session[:user_page] == params[:id]
       handle = page_user = @@user_model.user_exists?(params[:id])

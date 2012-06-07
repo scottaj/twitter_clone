@@ -8,7 +8,7 @@ div class="container-fluid"
           button type="submit" class="btn #{following ? "btn-warning" : "btn-success"} btn-large" = following ? "Unfollow" : "Follow"
       div class="row-fluid"
         div class="span2"
-        div class="span6"
-          ==render :slim, :"tweet_list", locals: {title: "#{handle}'s Tweets", offset: offset, tweets: tweets}
+        div class="span6" id="feed"
+          ==render :slim, :"tweet_list", locals: {title: "#{handle}'s Tweets", id: "tweets", offset: offset, tweets: tweets}
     div class="well span4"
       ==render :slim, :'user_following', locals: {handle: handle, page_user: page_user}

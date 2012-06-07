@@ -6,5 +6,5 @@ div class="container-fluid"
         h1 class="span2" = tag                
       div class="row-fluid"
         div class="span4"
-        div class="span10"
-          ==render :slim, :"tweet_list", locals: {title: "Tweets with tag #{tag}", offset: offset, tweets: tweets}    
+        div class="span10 tag"
+          ==render :slim, :"tweet_list", locals: {title: "Tweets with tag #{tag}", id: "tweets", offset: offset, tweets: tweets}    
