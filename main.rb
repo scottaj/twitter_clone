@@ -157,7 +157,7 @@ class TwitterClone < Sinatra::Base
 
   post '/update' do
     slim :tweet_list, layout: false, locals: {title: "What is Happening",
-      id: "tweets"
+      id: "tweets",
       offset: request.cookies["offset"],
       tweets: @@tweet_model.get_tweets_from_followers(session[:user])}
   end
