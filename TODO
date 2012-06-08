@@ -1,5 +1,7 @@
 TODO List:
-     - Go back to mongoid branch and try to get mongoid subbed in.
-     - Deploy to Heroku
      - Experiment with ajax instead of page loads.
+       - follow/unfollow button.
+       - autocomplete for searches.
      - Make pages perttier and less empty.
+       - box below users you're following with random users you aren't following.
+       - Popular tags box?
