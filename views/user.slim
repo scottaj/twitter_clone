@@ -16,7 +16,7 @@ div class="container-fluid"
               checkAndUpdate("user", $("#name").text(), function(){
               loadUserUpdates("tweets", "feed", $("#name").text());
               });
-              }, 10000);
+              }, 60000);
               });
     div class="well span4"
       ==render :slim, :'user_following', locals: {handle: handle, page_user: page_user}

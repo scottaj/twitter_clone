@@ -3,8 +3,16 @@ div class="container-fluid"
     div class="span12"
       br
       div class="row-fluid"
-        h1 class="span2" = tag                
+        h1 class="span2" id="name" = tag                
       div class="row-fluid"
         div class="span4"
-        div class="span10 tag"
-          ==render :slim, :"tweet_list", locals: {title: "Tweets with tag #{tag}", id: "tweets", offset: offset, tweets: tweets}    
+        div class="span10" id="tag"
+          ==render :slim, :"tweet_list", locals: {title: "Tweets with tag #{tag}", id: "tweets", offset: offset, tweets: tweets}
+      javascript:
+          $(function(){
+            setInterval(function(){
+              checkAndUpdate("tag", $("#name").text(), function(){
+              loadTagUpdates("tweets", "tag", $("#name").text());
+              });
+              }, 10000);
+              });

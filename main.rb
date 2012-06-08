@@ -14,8 +14,8 @@ class TwitterClone < Sinatra::Base
   ##
   # ==App configuration
   # - Enables sessions
-  # - Creates database connection and uses that to create models
-  # for tweets and users.
+  # - Creates Mongoid connection
+  # - Create models for tweets and users.
   configure do
     enable :sessions
     
@@ -157,7 +157,7 @@ class TwitterClone < Sinatra::Base
     elsif params[:type] == "user"
       tweet = @@tweet_model.get_tweets_for_user(params[:param], 1)[0]
     elsif params[:type] == "tag"
-      tweet = @@tweet_model.get_tweets_for_tag(params[:param], 1)[0]
+      tweet = @@tweet_model.get_tweets_for_tag(params[:param][/[^#]+/], 1)[0]
     end
     if tweet
       return "t" if (Time.now.to_i - tweet.timestamp.to_i) <= 70
@@ -180,7 +180,10 @@ class TwitterClone < Sinatra::Base
   end
 
   post '/update/tag' do
-    
+    slim :tweet_list, layout: false, locals: {title: "Tweets with tag #{params[:tag]}",
+      id: "tweets",
+      offset: request.cookies["offset"],
+      tweets: @@tweet_model.get_tweets_for_tag(params[:tag][/[^#]+/])}
   end
 
   get '/:id' do
