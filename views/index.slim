@@ -3,7 +3,7 @@ div class="container-fluid"
     div class="span8"
       br
       div class="row-fluid"
-        h1 class="span2" = handle
+        h1 class="span2" id="name" = handle
         form class="well form-horizontal span12" action="\home" method="post" id="tweet-box"  
           div class="row-fluid"
             textarea class="input-xlarge span8" id="textarea" rows="4" name="tweet_text" placeholder="Enter your tweet"
@@ -13,18 +13,27 @@ div class="container-fluid"
         div class="span2"
         div class="span6" id="news"
           ==render :slim, :"tweet_list", locals: {title: "What is Happening", id: "following", offset: offset, tweets: followed_tweets}
+        
+        javascript:
+          $(function(){
+            setInterval(function(){
+              checkAndUpdate("news", $("#name").text(), function(){
+              loadNewsUpdates("following", "news", $("#name").text());
+              });
+              }, 60000);
+              });
       div class="row-fluid"      
         div class="span2"
         div class="span6" id="posts"        
           ==render :slim, :"tweet_list", locals: {title: "My Tweets", id: "user", offset: offset, tweets: user_tweets}
         javascript:           
-             $(function(){
-               $("#tweet-box").submit(function(event) {
+          $(function(){
+            $("#tweet-box").submit(function(event) {
              
-                event.preventDefault();                                         
-                var text = $("#textarea").val();
-                $("#textarea").val("");
-                $.post('/tweet', {tweet_text: text}, function( data ) {                 
+              event.preventDefault();                                         
+              var text = $("#textarea").val();
+              $("#textarea").val("");
+              $.post('/tweet', {tweet_text: text}, function( data ) {                 
                 $("#user").remove();
                 $("#posts").append( data );
                 }

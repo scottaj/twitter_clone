@@ -151,15 +151,33 @@ class TwitterClone < Sinatra::Base
       tweets: @@tweet_model.get_tweets_for_user(session[:user])}
   end
 
-  post '/check' do
-    
+  post '/update/check' do
+    if params[:type] == "news"
+      tweet = @@tweet_model.get_tweets_from_followers(session[:user], 1)[0]
+    elsif params[:type] == "user"
+      tweet = @@tweet_model.get_tweets_for_user(params[:param], 1)[0]
+    elsif params[:type] == "tag"
+      tweet = @@tweet_model.get_tweets_for_tag(params[:param], 1)[0]
+    end
+    if tweet
+      return "t" if (Time.now.to_i - tweet.timestamp.to_i) <= 70
+    end
+    return "f"
   end
 
-  post '/update' do
+  post '/update/news' do
     slim :tweet_list, layout: false, locals: {title: "What is Happening",
       id: "tweets",
       offset: request.cookies["offset"],
       tweets: @@tweet_model.get_tweets_from_followers(session[:user])}
+  end
+
+  post '/update/user' do
+    
+  end
+
+  post '/update/tag' do
+    
   end
 
   get '/:id' do
