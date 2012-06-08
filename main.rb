@@ -114,7 +114,7 @@ class TwitterClone < Sinatra::Base
     else
       @@user_model.follow_user(session[:user], session[:user_page])
     end
-    redirect "/#{session[:user_page]}"
+    redirect "/#{session[:user_page]}" unless params[:no_redirect]
   end
 
   get '/search' do

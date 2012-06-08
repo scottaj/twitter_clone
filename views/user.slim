@@ -4,8 +4,26 @@ div class="container-fluid"
       br
       div class="row-fluid"
         h1 class="span#{2 + handle.length / 7}" id="name" = handle        
-        form class="form-inline span6" action="/follow" method="post"
-          button type="submit" class="btn #{following ? "btn-warning" : "btn-success"} btn-large" = following ? "Unfollow" : "Follow"
+        form class="form-inline span6" id="follow" action="/follow" method="post"
+          button type="submit" class="btn #{following ? "btn-warning" : "btn-success"} btn-large" id="follow-button" = following ? "Unfollow" : "Follow"
+      javascript:           
+          $(function() {
+          $("#follow").submit(function(event) {             
+          event.preventDefault();                        
+            $.post('/follow', {no_redirect: true}, function( data ) {
+            if($("#follow-button").hasClass("btn-success")) {
+            $("#follow-button").removeClass("btn-success");
+            $("#follow-button").addClass("btn-warning");
+            $("#follow-button").text("Unfollow");
+            }
+            else {
+            $("#follow-button").removeClass("btn-warning");
+            $("#follow-button").addClass("btn-success");
+            $("#follow-button").text("Follow");
+            }
+            });
+            });
+            });
       div class="row-fluid"
         div class="span2"
         div class="span6" id="feed"
