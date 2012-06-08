@@ -3,12 +3,20 @@ div class="container-fluid"
     div class="span8"
       br
       div class="row-fluid"
-        h1 class="span#{2 + handle.length / 7}" = handle        
+        h1 class="span#{2 + handle.length / 7}" id="name" = handle        
         form class="form-inline span6" action="/follow" method="post"
           button type="submit" class="btn #{following ? "btn-warning" : "btn-success"} btn-large" = following ? "Unfollow" : "Follow"
       div class="row-fluid"
         div class="span2"
         div class="span6" id="feed"
           ==render :slim, :"tweet_list", locals: {title: "#{handle}'s Tweets", id: "tweets", offset: offset, tweets: tweets}
+      javascript:
+          $(function(){
+            setInterval(function(){
+              checkAndUpdate("user", $("#name").text(), function(){
+              loadUserUpdates("tweets", "feed", $("#name").text());
+              });
+              }, 10000);
+              });
     div class="well span4"
       ==render :slim, :'user_following', locals: {handle: handle, page_user: page_user}
