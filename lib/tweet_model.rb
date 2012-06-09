@@ -60,4 +60,12 @@ class TweetModel
     tweets.sort! {|t1, t2| t2.timestamp <=> t1.timestamp}
     return tweets[0...limit]
   end
+
+  def tag_search(tag, limit = 50)
+    results = []
+    Tweet.where(tags: /#{tag}/).desc(:timestamp).limit(limit).each do |tweet|
+      tweet.tags.each {|ttag| results << ttag if ttag.match(/#{tag}/)}
+    end
+    return results.uniq
+  end
 end

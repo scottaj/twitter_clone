@@ -27,4 +27,3 @@ function checkAndUpdate(type, param, updater) {
 	return 0;
     });
 };
-

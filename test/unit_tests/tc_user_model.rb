@@ -65,4 +65,16 @@ class TestUserModel < Test::Unit::TestCase
     assert_equal(nil, @user_model.user_exists?("Crazy"), "Testing that an utterly wrong username returns false.")
     assert_equal(nil, @user_model.user_exists?("retested"), "testing that a string with a username in it will not return true.")
   end
+
+  def test_user_search()
+    User.create(handle: "test", following: [])
+    User.create(handle: "u1", following: [])
+    User.create(handle: "u2", following: [])
+    User.create(handle: "user", following: [])
+    User.create(handle: "testy", following: [])
+    assert_equal([], @user_model.user_search("zi"))
+    assert_equal(["u1", "u2", "user"], @user_model.user_search("u"))
+    assert_equal(["user"], @user_model.user_search("us"))
+    assert_equal(["test", "testy"], @user_model.user_search("es"))
+  end
 end

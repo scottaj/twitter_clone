@@ -72,4 +72,17 @@ class TestTweetModel < Test::Unit::TestCase
     assert_equal([t3], @tweet_model.get_tweets_from_followers("u1", 1), "Testing with a limit")
     assert_equal([], @tweet_model.get_tweets_from_followers("u3"), "Testing a user not following anyone.")
   end
+
+  def test_tag_search()
+    t1 = @tweet_model.tweet("Test #from u2 #hashtag #cook", "u2")
+    sleep(2)
+    t2 = @tweet_model.tweet("test #from u3 #tag #crook", "u3")
+    sleep(3)
+    t3 = @tweet_model.tweet("last test yo. #fro", "u2")
+    assert_equal(["fro", "from"], @tweet_model.tag_search("f"))
+    assert_equal(["from"], @tweet_model.tag_search("from"))
+    assert_equal(["tag", "hashtag"], @tweet_model.tag_search("ta"))
+    assert_equal(["cook"], @tweet_model.tag_search("co"))
+    assert_equal([], @tweet_model.tag_search("zi"))
+  end
 end

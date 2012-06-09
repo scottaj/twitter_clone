@@ -4,6 +4,7 @@ require 'slim'
 require 'mongoid'
 require 'yaml'
 require 'uri'
+require 'json'
 require_relative 'lib/user_model'
 require_relative 'lib/tweet_model'
 
@@ -184,6 +185,18 @@ class TwitterClone < Sinatra::Base
       id: "tweets",
       offset: request.cookies["offset"],
       tweets: @@tweet_model.get_tweets_for_tag(params[:tag][/[^#]+/])}
+  end
+
+  post '/complete' do
+    if params[:query].match(/^#\S+$/)
+      data = JSON::dump(@@tweet_model.tag_search(params[:query]))
+    elsif params[:query].match(/^\S+$/)
+      data = JSON::dump(@@user_model.user_search(params[:query]))
+    else
+      data = JSON::dump([])
+    end
+    content_type "application/json"
+    data
   end
 
   get '/:id' do

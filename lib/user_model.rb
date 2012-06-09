@@ -41,4 +41,12 @@ class UserModel
     return true if User.where(handle: follower, following: following).first
     return false
   end
+
+  def user_search(handle, limit = 50)
+    results = []
+    User.where(handle: /#{handle}/).limit(limit).each do |user|
+      results << user.handle
+    end
+    return results
+  end
 end
