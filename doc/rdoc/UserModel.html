@@ -65,13 +65,17 @@
         <h3 class="section-header">Methods</h3>
         <ul class="link-list">
           
-          <li><a href="#method-c-new">::new</a></li>
+          <li><a href="#method-i-follow_user">#follow_user</a></li>
+          
+          <li><a href="#method-i-following-3F">#following?</a></li>
           
           <li><a href="#method-i-get_user_by_handle">#get_user_by_handle</a></li>
           
-          <li><a href="#method-i-save_user">#save_user</a></li>
+          <li><a href="#method-i-unfollow_user">#unfollow_user</a></li>
           
           <li><a href="#method-i-user_exists-3F">#user_exists?</a></li>
+          
+          <li><a href="#method-i-user_search">#user_search</a></li>
           
         </ul>
       </div>
@@ -143,54 +147,95 @@ a mongo database.</p>
 
       <!-- Methods -->
       
-      <div id="public-class-method-details" class="method-section section">
-        <h3 class="section-header">Public Class Methods</h3>
+      <div id="public-instance-method-details" class="method-section section">
+        <h3 class="section-header">Public Instance Methods</h3>
 
       
-        <div id="new-method" class="method-detail ">
-          <a name="method-c-new"></a>
+        <div id="follow_user-method" class="method-detail ">
+          <a name="method-i-follow_user"></a>
 
           
           <div class="method-heading">
-            <span class="method-name">new</span><span
-              class="method-args">(connection, collection_name)</span>
+            <span class="method-name">follow_user</span><span
+              class="method-args">(follower, following)</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
           
 
           <div class="method-description">
             
-            <p>Create a new user model.</p>
+            <p>Follow a user.</p>
 
 <h3>ARGS:</h3>
 <ul><li>
-<p>connection should be a Mongo database connection.</p>
-</li><li>
-<p>collection_name should be the name of a collection within the database.</p>
+<p>follower is the handle of a user who is doing the following of a</p>
+</li></ul>
+
+<p>new user, a String.</p>
+<ul><li>
+<p>following is the handle of a user who is being followed, a String.</p>
 </li></ul>
             
 
             
-            <div class="method-source-code" id="new-source">
+            <div class="method-source-code" id="follow_user-source">
 <pre>
-<span class="ruby-comment"># File lib/user_model.rb, line 15</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">connection</span>, <span class="ruby-identifier">collection_name</span>)
-  <span class="ruby-ivar">@connection</span> = <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">collection</span>(<span class="ruby-identifier">collection_name</span>)
+<span class="ruby-comment"># File lib/user_model.rb, line 39</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">follow_user</span>(<span class="ruby-identifier">follower</span>, <span class="ruby-identifier">following</span>)
+  <span class="ruby-constant">User</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-identifier">follower</span>).<span class="ruby-identifier">first</span>.<span class="ruby-identifier">push</span>(<span class="ruby-value">:following</span>, <span class="ruby-identifier">following</span>)
 <span class="ruby-keyword">end</span></pre>
-            </div><!-- new-source -->
+            </div><!-- follow_user-source -->
             
           </div>
 
           
 
           
-        </div><!-- new-method -->
+        </div><!-- follow_user-method -->
 
       
-      </div><!-- public-class-method-details -->
-    
-      <div id="public-instance-method-details" class="method-section section">
-        <h3 class="section-header">Public Instance Methods</h3>
+        <div id="following-3F-method" class="method-detail ">
+          <a name="method-i-following-3F"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">following?</span><span
+              class="method-args">(follower, following)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>Returns true if a user is being followed, false otherwise.</p>
+
+<h3>ARGS:</h3>
+<ul><li>
+<p>follower is the handle of a user who is doing the following of a</p>
+</li></ul>
+
+<p>new user, a String.</p>
+<ul><li>
+<p>following is the handle of a user who is being followed, a String.</p>
+</li></ul>
+            
+
+            
+            <div class="method-source-code" id="following-3F-source">
+<pre>
+<span class="ruby-comment"># File lib/user_model.rb, line 61</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">following?</span>(<span class="ruby-identifier">follower</span>, <span class="ruby-identifier">following</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">User</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-identifier">follower</span>, <span class="ruby-identifier">following</span><span class="ruby-operator">:</span> <span class="ruby-identifier">following</span>).<span class="ruby-identifier">first</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- following-3F-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- following-3F-method -->
 
       
         <div id="get_user_by_handle-method" class="method-detail ">
@@ -218,10 +263,9 @@ an object is generated with the database info and returned.</p>
             
             <div class="method-source-code" id="get_user_by_handle-source">
 <pre>
-<span class="ruby-comment"># File lib/user_model.rb, line 57</span>
+<span class="ruby-comment"># File lib/user_model.rb, line 28</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get_user_by_handle</span>(<span class="ruby-identifier">handle</span>)
-  <span class="ruby-identifier">record</span> = <span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">find_one</span>(<span class="ruby-string">&quot;_id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">handle</span>)
-  <span class="ruby-keyword">return</span> <span class="ruby-constant">User</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">record</span>[<span class="ruby-string">&quot;_id&quot;</span>], <span class="ruby-identifier">record</span>[<span class="ruby-string">&quot;following&quot;</span>]) <span class="ruby-keyword">if</span> <span class="ruby-identifier">record</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-constant">User</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-identifier">handle</span>).<span class="ruby-identifier">first</span>
 <span class="ruby-keyword">end</span></pre>
             </div><!-- get_user_by_handle-source -->
             
@@ -233,51 +277,47 @@ an object is generated with the database info and returned.</p>
         </div><!-- get_user_by_handle-method -->
 
       
-        <div id="save_user-method" class="method-detail ">
-          <a name="method-i-save_user"></a>
+        <div id="unfollow_user-method" class="method-detail ">
+          <a name="method-i-unfollow_user"></a>
 
           
           <div class="method-heading">
-            <span class="method-name">save_user</span><span
-              class="method-args">(user)</span>
+            <span class="method-name">unfollow_user</span><span
+              class="method-args">(follower, following)</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
           
 
           <div class="method-description">
             
-            <p>Save a user object to a mongo database.</p>
-
-<p>If a user does not exist in the database they are added, if they do exist
-then the existing record is modified.</p>
+            <p>Unfollow a user.</p>
 
 <h3>ARGS:</h3>
 <ul><li>
-<p>user should be a user object to be saved.</p>
+<p>follower is the handle of a user who is doing the unfollowing of a</p>
+</li></ul>
+
+<p>followed user, a String.</p>
+<ul><li>
+<p>following is the handle of a user who is being followed, a String.</p>
 </li></ul>
             
 
             
-            <div class="method-source-code" id="save_user-source">
+            <div class="method-source-code" id="unfollow_user-source">
 <pre>
-<span class="ruby-comment"># File lib/user_model.rb, line 27</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">save_user</span>(<span class="ruby-identifier">user</span>)
-  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">find_one</span>(<span class="ruby-string">&quot;_id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">handle</span>)
-    <span class="ruby-identifier">puts</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">modified</span>
-    <span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">update</span>({<span class="ruby-string">&quot;_id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">handle</span>}, {<span class="ruby-string">&quot;following&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">following</span>.<span class="ruby-identifier">to_a</span>}) <span class="ruby-keyword">if</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">modified</span>
-  <span class="ruby-keyword">else</span>
-    <span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-string">&quot;_id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">handle</span>, <span class="ruby-string">&quot;following&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">following</span>.<span class="ruby-identifier">to_a</span>)
-  <span class="ruby-keyword">end</span>
-  <span class="ruby-identifier">user</span>.<span class="ruby-identifier">modified</span> = <span class="ruby-keyword">false</span>
+<span class="ruby-comment"># File lib/user_model.rb, line 50</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">unfollow_user</span>(<span class="ruby-identifier">follower</span>, <span class="ruby-identifier">following</span>)
+  <span class="ruby-constant">User</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-identifier">follower</span>).<span class="ruby-identifier">first</span>.<span class="ruby-identifier">pull</span>(<span class="ruby-value">:following</span>, <span class="ruby-identifier">following</span>)
 <span class="ruby-keyword">end</span></pre>
-            </div><!-- save_user-source -->
+            </div><!-- unfollow_user-source -->
             
           </div>
 
           
 
           
-        </div><!-- save_user-method -->
+        </div><!-- unfollow_user-method -->
 
       
         <div id="user_exists-3F-method" class="method-detail ">
@@ -306,11 +346,11 @@ otherwise.</p>
             
             <div class="method-source-code" id="user_exists-3F-source">
 <pre>
-<span class="ruby-comment"># File lib/user_model.rb, line 44</span>
+<span class="ruby-comment"># File lib/user_model.rb, line 15</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">user_exists?</span>(<span class="ruby-identifier">handle</span>)
-  <span class="ruby-identifier">result</span> = <span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">find_one</span>(<span class="ruby-string">&quot;_id&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">/^#{handle}$/</span>)
-  <span class="ruby-keyword">return</span> <span class="ruby-identifier">result</span>[<span class="ruby-string">&quot;_id&quot;</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">result</span>
-  <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-node">/^#{handle}$/</span>).<span class="ruby-identifier">first</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">handle</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">user</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">user</span>
 <span class="ruby-keyword">end</span></pre>
             </div><!-- user_exists-3F-source -->
             
@@ -320,6 +360,57 @@ otherwise.</p>
 
           
         </div><!-- user_exists-3F-method -->
+
+      
+        <div id="user_search-method" class="method-detail ">
+          <a name="method-i-user_search"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">user_search</span><span
+              class="method-args">(handle, limit = 50)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>Search all users for a handle that matches the provided sting via regex.
+Returns up to limit matching users in no partiucular order.</p>
+
+<h3>ARGS:</h3>
+<ul><li>
+<p>handle is a search query to search existing handles for a match</p>
+</li></ul>
+
+<p>to, a String.</p>
+<ul><li>
+<p>limit should be the maximum number of <a href="User.html">User</a> handles
+you want returned.</p>
+</li></ul>
+
+<p>The default limit is 50.</p>
+            
+
+            
+            <div class="method-source-code" id="user_search-source">
+<pre>
+<span class="ruby-comment"># File lib/user_model.rb, line 75</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">user_search</span>(<span class="ruby-identifier">handle</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-value">50</span>)
+  <span class="ruby-identifier">results</span> = []
+  <span class="ruby-constant">User</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-node">/#{handle}/</span>).<span class="ruby-identifier">limit</span>(<span class="ruby-identifier">limit</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">user</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">results</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">handle</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">results</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- user_search-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- user_search-method -->
 
       
       </div><!-- public-instance-method-details -->

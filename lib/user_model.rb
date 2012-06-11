@@ -30,20 +30,48 @@ class UserModel
   end
 
   ##
-  # 
+  # Follow a user.
+  #
+  # ===ARGS:
+  # - follower is the handle of a user who is doing the following of a
+  # new user, a String.
+  # - following is the handle of a user who is being followed, a String.
   def follow_user(follower, following)
     User.where(handle: follower).first.push(:following, following)
   end
 
+  ##
+  # Unfollow a user.
+  #
+  # ===ARGS:
+  # - follower is the handle of a user who is doing the unfollowing of a
+  # followed user, a String.
+  # - following is the handle of a user who is being followed, a String.
   def unfollow_user(follower, following)
     User.where(handle: follower).first.pull(:following, following)
   end
 
+  ##
+  # Returns true if a user is being followed, false otherwise.
+  #
+  # ===ARGS:
+  # - follower is the handle of a user who is doing the following of a
+  # new user, a String.
+  # - following is the handle of a user who is being followed, a String.
   def following?(follower, following)
     return true if User.where(handle: follower, following: following).first
     return false
   end
 
+  ##
+  # Search all users for a handle that matches the provided sting via
+  # regex. Returns up to limit matching users in no partiucular order.
+  #
+  # ===ARGS:
+  # - handle is a search query to search existing handles for a match
+  # to, a String.
+  # - limit should be the maximum number of User handles you want returned.
+  # The default limit is 50.
   def user_search(handle, limit = 50)
     results = []
     User.where(handle: /#{handle}/i).limit(limit).each do |user|

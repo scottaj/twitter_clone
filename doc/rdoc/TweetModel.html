@@ -65,15 +65,15 @@
         <h3 class="section-header">Methods</h3>
         <ul class="link-list">
           
-          <li><a href="#method-c-new">::new</a></li>
-          
           <li><a href="#method-i-get_tweets_for_tag">#get_tweets_for_tag</a></li>
           
           <li><a href="#method-i-get_tweets_for_user">#get_tweets_for_user</a></li>
           
           <li><a href="#method-i-get_tweets_from_followers">#get_tweets_from_followers</a></li>
           
-          <li><a href="#method-i-save_tweet">#save_tweet</a></li>
+          <li><a href="#method-i-tag_search">#tag_search</a></li>
+          
+          <li><a href="#method-i-tweet">#tweet</a></li>
           
         </ul>
       </div>
@@ -144,52 +144,6 @@
 
       <!-- Methods -->
       
-      <div id="public-class-method-details" class="method-section section">
-        <h3 class="section-header">Public Class Methods</h3>
-
-      
-        <div id="new-method" class="method-detail ">
-          <a name="method-c-new"></a>
-
-          
-          <div class="method-heading">
-            <span class="method-name">new</span><span
-              class="method-args">(connection, collection_name)</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            <p>Creates a new <a href="TweetModel.html">TweetModel</a> object.</p>
-
-<h3>ARGS:</h3>
-<ul><li>
-<p>connection should be a Mongo database connection.</p>
-</li><li>
-<p>collection_name should be the name of a collection within the database.</p>
-</li></ul>
-            
-
-            
-            <div class="method-source-code" id="new-source">
-<pre>
-<span class="ruby-comment"># File lib/tweet_model.rb, line 14</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">connection</span>, <span class="ruby-identifier">collection_name</span>)
-  <span class="ruby-ivar">@connection</span> = <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">collection</span>(<span class="ruby-identifier">collection_name</span>)
-<span class="ruby-keyword">end</span></pre>
-            </div><!-- new-source -->
-            
-          </div>
-
-          
-
-          
-        </div><!-- new-method -->
-
-      
-      </div><!-- public-class-method-details -->
-    
       <div id="public-instance-method-details" class="method-section section">
         <h3 class="section-header">Public Instance Methods</h3>
 
@@ -213,8 +167,11 @@ most recent tweets will be first in the array.</p>
 
 <h3>ARGS:</h3>
 <ul><li>
-<p>tag should be a string tag you want to search for.</p>
-</li><li>
+<p>tag should be a string tag you want to search for, without the prepending</p>
+</li></ul>
+
+<p>‘#’ symbol.</p>
+<ul><li>
 <p>limit should be the maximum number of tweets you want returned.</p>
 </li></ul>
 
@@ -224,15 +181,10 @@ most recent tweets will be first in the array.</p>
             
             <div class="method-source-code" id="get_tweets_for_tag-source">
 <pre>
-<span class="ruby-comment"># File lib/tweet_model.rb, line 56</span>
+<span class="ruby-comment"># File lib/tweet_model.rb, line 50</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get_tweets_for_tag</span>(<span class="ruby-identifier">tag</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-value">50</span>)
-  <span class="ruby-identifier">result_set</span> = <span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">find</span>(<span class="ruby-string">&quot;tags&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">tag</span>).<span class="ruby-identifier">sort</span>([[<span class="ruby-string">&quot;timestamp&quot;</span>, <span class="ruby-value">-1</span>]]).<span class="ruby-identifier">limit</span>(<span class="ruby-identifier">limit</span>)
   <span class="ruby-identifier">tweets</span> = []
-
-  <span class="ruby-identifier">result_set</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">result</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">tweets</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Tweet</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">result</span>[<span class="ruby-string">&quot;text&quot;</span>], <span class="ruby-identifier">result</span>[<span class="ruby-string">&quot;user&quot;</span>], <span class="ruby-identifier">result</span>[<span class="ruby-string">&quot;timestamp&quot;</span>], <span class="ruby-identifier">result</span>[<span class="ruby-string">&quot;tags&quot;</span>])
-  <span class="ruby-keyword">end</span>
-
+  <span class="ruby-constant">Tweet</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">tags</span><span class="ruby-operator">:</span> <span class="ruby-identifier">tag</span>).<span class="ruby-identifier">desc</span>(<span class="ruby-value">:timestamp</span>).<span class="ruby-identifier">limit</span>(<span class="ruby-identifier">limit</span>).<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">tweet</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tweets</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">tweet</span>}
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">tweets</span>
 <span class="ruby-keyword">end</span></pre>
             </div><!-- get_tweets_for_tag-source -->
@@ -251,7 +203,7 @@ most recent tweets will be first in the array.</p>
           
           <div class="method-heading">
             <span class="method-name">get_tweets_for_user</span><span
-              class="method-args">(user, limit = 50)</span>
+              class="method-args">(handle, limit = 50)</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
           
@@ -260,16 +212,12 @@ most recent tweets will be first in the array.</p>
             
             <p>Returns a collection of tweets created by a given user as an array. The
 tweets are stored in the array in descending order by timestamp, so the
-most recent tweets will be first in the array.</p>
+most recent tweets will be first in the eumerable.</p>
 
 <h3>ARGS:</h3>
 <ul><li>
-<p>user should be a <a href="User.html">User</a> object for which to find
-tweets or a String</p>
-</li></ul>
-
-<p>username.</p>
-<ul><li>
+<p>handle should be a String user handle.</p>
+</li><li>
 <p>limit should be the maximum number of tweets you want returned.</p>
 </li></ul>
 
@@ -279,12 +227,10 @@ tweets or a String</p>
             
             <div class="method-source-code" id="get_tweets_for_user-source">
 <pre>
-<span class="ruby-comment"># File lib/tweet_model.rb, line 38</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_tweets_for_user</span>(<span class="ruby-identifier">user</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-value">50</span>)
-  <span class="ruby-identifier">result_set</span> = <span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">find</span>(<span class="ruby-string">&quot;user&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">User</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">handle</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">user</span>).<span class="ruby-identifier">sort</span>([[<span class="ruby-string">&quot;timestamp&quot;</span>, <span class="ruby-value">-1</span>]]).<span class="ruby-identifier">limit</span>(<span class="ruby-identifier">limit</span>)
+<span class="ruby-comment"># File lib/tweet_model.rb, line 33</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_tweets_for_user</span>(<span class="ruby-identifier">handle</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-value">50</span>)
   <span class="ruby-identifier">tweets</span> = []
-
-  <span class="ruby-identifier">result_set</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">result</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tweets</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Tweet</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">result</span>[<span class="ruby-string">&quot;text&quot;</span>], <span class="ruby-identifier">user</span>, <span class="ruby-identifier">result</span>[<span class="ruby-string">&quot;timestamp&quot;</span>], <span class="ruby-identifier">result</span>[<span class="ruby-string">&quot;tags&quot;</span>])}
+  <span class="ruby-constant">Tweet</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">user</span><span class="ruby-operator">:</span> <span class="ruby-identifier">handle</span>).<span class="ruby-identifier">desc</span>(<span class="ruby-value">:timestamp</span>).<span class="ruby-identifier">limit</span>(<span class="ruby-identifier">limit</span>).<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">tweet</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tweets</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">tweet</span>}
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">tweets</span>
 <span class="ruby-keyword">end</span></pre>
             </div><!-- get_tweets_for_user-source -->
@@ -303,7 +249,7 @@ tweets or a String</p>
           
           <div class="method-heading">
             <span class="method-name">get_tweets_from_followers</span><span
-              class="method-args">(user, limit = 50)</span>
+              class="method-args">(handle, limit = 50)</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
           
@@ -315,8 +261,7 @@ recent tweets.</p>
 
 <h3>ARGS:</h3>
 <ul><li>
-<p><a href="User.html">User</a> should be the <a href="User.html">User</a>
-object from whose followers you want tweets.</p>
+<p>handle should be a String user handle.</p>
 </li><li>
 <p>limit should be the maximum number of tweets you want returned.</p>
 </li></ul>
@@ -327,10 +272,12 @@ object from whose followers you want tweets.</p>
             
             <div class="method-source-code" id="get_tweets_from_followers-source">
 <pre>
-<span class="ruby-comment"># File lib/tweet_model.rb, line 75</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_tweets_from_followers</span>(<span class="ruby-identifier">user</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-value">50</span>)
+<span class="ruby-comment"># File lib/tweet_model.rb, line 64</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_tweets_from_followers</span>(<span class="ruby-identifier">handle</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-value">50</span>)
   <span class="ruby-identifier">tweets</span> = []
-  <span class="ruby-identifier">user</span>.<span class="ruby-identifier">following</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">followed</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tweets</span> = <span class="ruby-identifier">tweets</span> <span class="ruby-operator">+</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">get_tweets_for_user</span>(<span class="ruby-identifier">followed</span>)}
+  <span class="ruby-constant">User</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-identifier">handle</span>).<span class="ruby-identifier">first</span>.<span class="ruby-identifier">following</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">followed</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">tweets</span> = <span class="ruby-identifier">tweets</span> <span class="ruby-operator">+</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">get_tweets_for_user</span>(<span class="ruby-identifier">followed</span>)
+  <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">tweets</span>.<span class="ruby-identifier">sort!</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">t1</span>, <span class="ruby-identifier">t2</span><span class="ruby-operator">|</span> <span class="ruby-identifier">t2</span>.<span class="ruby-identifier">timestamp</span> <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">t1</span>.<span class="ruby-identifier">timestamp</span>}
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">tweets</span>[<span class="ruby-value">0</span><span class="ruby-operator">...</span><span class="ruby-identifier">limit</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -344,42 +291,101 @@ object from whose followers you want tweets.</p>
         </div><!-- get_tweets_from_followers-method -->
 
       
-        <div id="save_tweet-method" class="method-detail ">
-          <a name="method-i-save_tweet"></a>
+        <div id="tag_search-method" class="method-detail ">
+          <a name="method-i-tag_search"></a>
 
           
           <div class="method-heading">
-            <span class="method-name">save_tweet</span><span
-              class="method-args">(tweet)</span>
+            <span class="method-name">tag_search</span><span
+              class="method-args">(tag, limit = 50)</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
           
 
           <div class="method-description">
             
-            <p>Saves a <a href="Tweet.html">Tweet</a> object to the database.</p>
+            <p>Search all tweets starting with the most recent for a tag that matches the
+provided query. Up to limit Tweets will be checked, however since the same
+tag may match for more that one tweet, less than limit results may be
+returned. Conversely, since more that one tag in a <a
+href="Tweet.html">Tweet</a> may match the regex, more than limit results
+may be returned. An array of all discovered matching tags is returned with
+no duplicates.</p>
 
 <h3>ARGS:</h3>
 <ul><li>
-<p>tweet should be a tweet object to be saved.</p>
+<p>tag should be a string to searchto search for using regex.</p>
+</li><li>
+<p>limit should be the maximum number of tweets you want returned.</p>
 </li></ul>
+
+<p>The default limit is 50.</p>
             
 
             
-            <div class="method-source-code" id="save_tweet-source">
+            <div class="method-source-code" id="tag_search-source">
 <pre>
-<span class="ruby-comment"># File lib/tweet_model.rb, line 23</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">save_tweet</span>(<span class="ruby-identifier">tweet</span>)
-  <span class="ruby-ivar">@connection</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-string">&quot;text&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">tweet</span>.<span class="ruby-identifier">text</span>, <span class="ruby-string">&quot;user&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">tweet</span>.<span class="ruby-identifier">user</span>, <span class="ruby-string">&quot;timestamp&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">tweet</span>.<span class="ruby-identifier">timestamp</span>.<span class="ruby-identifier">to_i</span>, <span class="ruby-string">&quot;tags&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">tweet</span>.<span class="ruby-identifier">tags</span>.<span class="ruby-identifier">to_a</span>)
+<span class="ruby-comment"># File lib/tweet_model.rb, line 85</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">tag_search</span>(<span class="ruby-identifier">tag</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-value">50</span>)
+  <span class="ruby-identifier">results</span> = []
+  <span class="ruby-constant">Tweet</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">tags</span><span class="ruby-operator">:</span> <span class="ruby-node">/#{tag}/</span>).<span class="ruby-identifier">desc</span>(<span class="ruby-value">:timestamp</span>).<span class="ruby-identifier">limit</span>(<span class="ruby-identifier">limit</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">tweet</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">tweet</span>.<span class="ruby-identifier">tags</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">ttag</span><span class="ruby-operator">|</span> <span class="ruby-identifier">results</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;##{ttag}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">ttag</span>.<span class="ruby-identifier">match</span>(<span class="ruby-node">/#{tag}/</span>)}
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">results</span>.<span class="ruby-identifier">uniq</span>
 <span class="ruby-keyword">end</span></pre>
-            </div><!-- save_tweet-source -->
+            </div><!-- tag_search-source -->
             
           </div>
 
           
 
           
-        </div><!-- save_tweet-method -->
+        </div><!-- tag_search-method -->
+
+      
+        <div id="tweet-method" class="method-detail ">
+          <a name="method-i-tweet"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">tweet</span><span
+              class="method-args">(text, user)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>Creates a new <a href="Tweet.html">Tweet</a> and persists it in the data
+store. The timestamp is autogenerated at the time of creation, and the tag
+are automatically extracted from the text. Returns the created <a
+href="Tweet.html">Tweet</a>.</p>
+
+<h3>ARGS:</h3>
+<ul><li>
+<p>text should be the text of the tweet, a String.</p>
+</li><li>
+<p>user should be a <a href="User.html">User</a> handle, a String.</p>
+</li></ul>
+            
+
+            
+            <div class="method-source-code" id="tweet-source">
+<pre>
+<span class="ruby-comment"># File lib/tweet_model.rb, line 16</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">tweet</span>(<span class="ruby-identifier">text</span>, <span class="ruby-identifier">user</span>)
+  <span class="ruby-identifier">tags</span> = []
+  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-node">/#\S+/</span>) {<span class="ruby-operator">|</span><span class="ruby-identifier">match</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tags</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">match</span>[<span class="ruby-node">/[^#]+/</span>]}
+  <span class="ruby-constant">Tweet</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">text</span><span class="ruby-operator">:</span> <span class="ruby-identifier">text</span>, <span class="ruby-identifier">user</span><span class="ruby-operator">:</span> <span class="ruby-identifier">user</span>, <span class="ruby-identifier">timestamp</span><span class="ruby-operator">:</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>.<span class="ruby-identifier">utc</span>, <span class="ruby-identifier">tags</span><span class="ruby-operator">:</span> <span class="ruby-identifier">tags</span>)
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- tweet-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- tweet-method -->
 
       
       </div><!-- public-instance-method-details -->

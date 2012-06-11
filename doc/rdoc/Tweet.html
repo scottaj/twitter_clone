@@ -34,8 +34,8 @@
         <div class="section-body">
           <ul>
           
-            <li><a href="./lib/tweet_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
-              class="thickbox" title="lib/tweet.rb">lib/tweet.rb</a></li>
+            <li><a href="./lib/tweet_m_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/tweet_m.rb">lib/tweet_m.rb</a></li>
           
           </ul>
         </div>
@@ -60,19 +60,19 @@
       
 
       
-      <!-- Method Quickref -->
-      <div id="method-list-section" class="section">
-        <h3 class="section-header">Methods</h3>
+
+      
+      <!-- Included Modules -->
+      <div id="includes-section" class="section">
+        <h3 class="section-header">Included Modules</h3>
         <ul class="link-list">
-          
-          <li><a href="#method-c-new">::new</a></li>
-          
-          <li><a href="#method-i-3D-3D">#==</a></li>
-          
+        
+        
+          <li><span class="include">Mongoid::Document</span></li>
+        
+        
         </ul>
       </div>
-      
-
       
     </div>
 
@@ -120,8 +120,6 @@
 
     <div id="description" class="description">
       
-<p>Class representing a <a href="Tweet.html">Tweet</a> from a user.</p>
-
     </div><!-- description -->
 
     
@@ -135,207 +133,9 @@
       
 
       
-      <!-- Attributes -->
-      <div id="attribute-method-details" class="method-section section">
-        <h3 class="section-header">Attributes</h3>
-
-        
-        <div id="tags-attribute-method" class="method-detail">
-          <a name="tags"></a>
-          
-          <div class="method-heading attribute-method-heading">
-            <span class="method-name">tags</span><span
-              class="attribute-access-type">[R]</span>
-          </div>
-
-          <div class="method-description">
-          
-          
-          
-          </div>
-        </div>
-        
-        <div id="text-attribute-method" class="method-detail">
-          <a name="text"></a>
-          
-          <div class="method-heading attribute-method-heading">
-            <span class="method-name">text</span><span
-              class="attribute-access-type">[R]</span>
-          </div>
-
-          <div class="method-description">
-          
-          
-          
-          </div>
-        </div>
-        
-        <div id="timestamp-attribute-method" class="method-detail">
-          <a name="timestamp"></a>
-          
-          <div class="method-heading attribute-method-heading">
-            <span class="method-name">timestamp</span><span
-              class="attribute-access-type">[R]</span>
-          </div>
-
-          <div class="method-description">
-          
-          
-          
-          </div>
-        </div>
-        
-        <div id="user-attribute-method" class="method-detail">
-          <a name="user"></a>
-          
-          <div class="method-heading attribute-method-heading">
-            <span class="method-name">user</span><span
-              class="attribute-access-type">[R]</span>
-          </div>
-
-          <div class="method-description">
-          
-          
-          
-          </div>
-        </div>
-        
-      </div><!-- attribute-method-details -->
-      
 
       <!-- Methods -->
       
-      <div id="public-class-method-details" class="method-section section">
-        <h3 class="section-header">Public Class Methods</h3>
-
-      
-        <div id="new-method" class="method-detail ">
-          <a name="method-c-new"></a>
-
-          
-          <div class="method-heading">
-            <span class="method-name">new</span><span
-              class="method-args">(text, user, timestamp = nil, tags = nil)</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            <p>Creates a new tweet object.</p>
-
-<h3>ARGS:</h3>
-<ul><li>
-<p>text sould be a string of the tweet’s text.</p>
-</li><li>
-<p>user can be either a user object or just a string</p>
-</li></ul>
-
-<p>of the user’s name.</p>
-<ul><li>
-<p>timestamp is optional. If timestamnp is provided it</p>
-</li></ul>
-
-<p>should be a valid unix timestamp represented as an integer. If timestamp is
-not provided a ruby Time object will be created at the time of the objects
-creation.</p>
-<ul><li>
-<p>tags is optional. If tags is provided it should be an</p>
-</li></ul>
-
-<p>array of strings representing the tags in the post. If tags is not provided
-then the tags will be extrated from the tweet text using the hashtag
-symbol.</p>
-            
-
-            
-            <div class="method-source-code" id="new-source">
-<pre>
-<span class="ruby-comment"># File lib/tweet.rb, line 22</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">text</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">timestamp</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">tags</span> = <span class="ruby-keyword">nil</span>)
-  <span class="ruby-ivar">@text</span> = <span class="ruby-identifier">text</span>
-
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">User</span>)
-    <span class="ruby-ivar">@user</span> = <span class="ruby-identifier">user</span>.<span class="ruby-identifier">handle</span>
-  <span class="ruby-keyword">else</span>
-    <span class="ruby-ivar">@user</span> = <span class="ruby-identifier">user</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">timestamp</span>
-    <span class="ruby-ivar">@timestamp</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">timestamp</span>)
-  <span class="ruby-keyword">else</span>
-    <span class="ruby-ivar">@timestamp</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">tags</span>
-    <span class="ruby-ivar">@tags</span> = <span class="ruby-constant">Set</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">tags</span>)
-  <span class="ruby-keyword">else</span>
-    <span class="ruby-ivar">@tags</span> = <span class="ruby-constant">Set</span>.<span class="ruby-identifier">new</span>
-    
-    <span class="ruby-comment"># Extract tags from text, strip hash from tag.</span>
-    <span class="ruby-identifier">text</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-node">/#\S+/</span>) {<span class="ruby-operator">|</span><span class="ruby-identifier">match</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@tags</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">match</span>[<span class="ruby-node">/[^#]+/</span>]}
-  <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">end</span></pre>
-            </div><!-- new-source -->
-            
-          </div>
-
-          
-
-          
-        </div><!-- new-method -->
-
-      
-      </div><!-- public-class-method-details -->
-    
-      <div id="public-instance-method-details" class="method-section section">
-        <h3 class="section-header">Public Instance Methods</h3>
-
-      
-        <div id="3D-3D-method" class="method-detail ">
-          <a name="method-i-3D-3D"></a>
-
-          
-          <div class="method-heading">
-            <span class="method-name">==</span><span
-              class="method-args">(other)</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            <p>Overloads the == method for the <a href="Tweet.html">Tweet</a> class.
-Equality is determined by the sameness of the user and the timestamp of the
-tweet. The assumption is that there will only be one tweet in existance for
-a particular user at a particular point in time.</p>
-
-<h3>ARGS:</h3>
-<ul><li>
-<p>other should be a tweet object that is being compared.</p>
-</li></ul>
-            
-
-            
-            <div class="method-source-code" id="3D-3D-source">
-<pre>
-<span class="ruby-comment"># File lib/tweet.rb, line 57</span>
-<span class="ruby-keyword">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">other</span>)
-  <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">user</span> <span class="ruby-keyword">and</span> <span class="ruby-ivar">@timestamp</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">timestamp</span>.<span class="ruby-identifier">to_i</span>
-  <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
-<span class="ruby-keyword">end</span></pre>
-            </div><!-- 3D-3D-source -->
-            
-          </div>
-
-          
-
-          
-        </div><!-- 3D-3D-method -->
-
-      
-      </div><!-- public-instance-method-details -->
-    
     </div><!-- 5Buntitled-5D -->
   
 

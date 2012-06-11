@@ -34,8 +34,8 @@
         <div class="section-body">
           <ul>
           
-            <li><a href="./lib/user_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
-              class="thickbox" title="lib/user.rb">lib/user.rb</a></li>
+            <li><a href="./lib/user_m_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/user_m.rb">lib/user_m.rb</a></li>
           
           </ul>
         </div>
@@ -60,25 +60,19 @@
       
 
       
-      <!-- Method Quickref -->
-      <div id="method-list-section" class="section">
-        <h3 class="section-header">Methods</h3>
+
+      
+      <!-- Included Modules -->
+      <div id="includes-section" class="section">
+        <h3 class="section-header">Included Modules</h3>
         <ul class="link-list">
-          
-          <li><a href="#method-c-new">::new</a></li>
-          
-          <li><a href="#method-i-follow_user">#follow_user</a></li>
-          
-          <li><a href="#method-i-following-3F">#following?</a></li>
-          
-          <li><a href="#method-i-tweet">#tweet</a></li>
-          
-          <li><a href="#method-i-unfollow_user">#unfollow_user</a></li>
-          
+        
+        
+          <li><span class="include">Mongoid::Document</span></li>
+        
+        
         </ul>
       </div>
-      
-
       
     </div>
 
@@ -126,8 +120,6 @@
 
     <div id="description" class="description">
       
-<p>Class representing an individual user.</p>
-
     </div><!-- description -->
 
     
@@ -141,287 +133,9 @@
       
 
       
-      <!-- Attributes -->
-      <div id="attribute-method-details" class="method-section section">
-        <h3 class="section-header">Attributes</h3>
-
-        
-        <div id="following-attribute-method" class="method-detail">
-          <a name="following"></a>
-          
-          <div class="method-heading attribute-method-heading">
-            <span class="method-name">following</span><span
-              class="attribute-access-type">[R]</span>
-          </div>
-
-          <div class="method-description">
-          
-          
-          
-          </div>
-        </div>
-        
-        <div id="handle-attribute-method" class="method-detail">
-          <a name="handle"></a>
-          
-          <div class="method-heading attribute-method-heading">
-            <span class="method-name">handle</span><span
-              class="attribute-access-type">[R]</span>
-          </div>
-
-          <div class="method-description">
-          
-          
-          
-          </div>
-        </div>
-        
-        <div id="modified-attribute-method" class="method-detail">
-          <a name="modified"></a>
-          
-          <a name="modified="></a>
-          
-          <div class="method-heading attribute-method-heading">
-            <span class="method-name">modified</span><span
-              class="attribute-access-type">[RW]</span>
-          </div>
-
-          <div class="method-description">
-          
-          
-          
-          </div>
-        </div>
-        
-      </div><!-- attribute-method-details -->
-      
 
       <!-- Methods -->
       
-      <div id="public-class-method-details" class="method-section section">
-        <h3 class="section-header">Public Class Methods</h3>
-
-      
-        <div id="new-method" class="method-detail ">
-          <a name="method-c-new"></a>
-
-          
-          <div class="method-heading">
-            <span class="method-name">new</span><span
-              class="method-args">(handle, following = nil)</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            <p>Creates a new <a href="User.html">User</a> object.</p>
-
-<h3>ARGS:</h3>
-<ul><li>
-<p>handle should be a string representing the user’s handle.</p>
-</li><li>
-<p>following can be an array of user handles that the user is</p>
-</li></ul>
-
-<p>following. If following is not provided then it is initialized to an empty
-set.</p>
-            
-
-            
-            <div class="method-source-code" id="new-source">
-<pre>
-<span class="ruby-comment"># File lib/user.rb, line 15</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">handle</span>, <span class="ruby-identifier">following</span> = <span class="ruby-keyword">nil</span>)
-  <span class="ruby-ivar">@handle</span> = <span class="ruby-identifier">handle</span>
-  <span class="ruby-ivar">@modified</span> = <span class="ruby-keyword">false</span>
-
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">following</span>
-    <span class="ruby-ivar">@following</span> = <span class="ruby-constant">Set</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">following</span>)
-  <span class="ruby-keyword">else</span>
-    <span class="ruby-ivar">@following</span> = <span class="ruby-constant">Set</span>.<span class="ruby-identifier">new</span>
-  <span class="ruby-keyword">end</span>  
-<span class="ruby-keyword">end</span></pre>
-            </div><!-- new-source -->
-            
-          </div>
-
-          
-
-          
-        </div><!-- new-method -->
-
-      
-      </div><!-- public-class-method-details -->
-    
-      <div id="public-instance-method-details" class="method-section section">
-        <h3 class="section-header">Public Instance Methods</h3>
-
-      
-        <div id="follow_user-method" class="method-detail ">
-          <a name="method-i-follow_user"></a>
-
-          
-          <div class="method-heading">
-            <span class="method-name">follow_user</span><span
-              class="method-args">(user)</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            <p>Follow a users tweets.</p>
-
-<h3>ARGS:</h3>
-<ul><li>
-<p>user should be a user object to follow.</p>
-</li></ul>
-            
-
-            
-            <div class="method-source-code" id="follow_user-source">
-<pre>
-<span class="ruby-comment"># File lib/user.rb, line 34</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">follow_user</span>(<span class="ruby-identifier">user</span>)
-  <span class="ruby-ivar">@following</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">handle</span>
-  <span class="ruby-ivar">@modified</span> = <span class="ruby-keyword">true</span>
-<span class="ruby-keyword">end</span></pre>
-            </div><!-- follow_user-source -->
-            
-          </div>
-
-          
-
-          
-        </div><!-- follow_user-method -->
-
-      
-        <div id="following-3F-method" class="method-detail ">
-          <a name="method-i-following-3F"></a>
-
-          
-          <div class="method-heading">
-            <span class="method-name">following?</span><span
-              class="method-args">(other_user)</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            <p>Returns true if user is following other_user, false otherwise.</p>
-
-<h3>ARGS:</h3>
-<ul><li>
-<p>other_user should be a <a href="User.html">User</a> object.</p>
-</li></ul>
-            
-
-            
-            <div class="method-source-code" id="following-3F-source">
-<pre>
-<span class="ruby-comment"># File lib/user.rb, line 70</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">following?</span>(<span class="ruby-identifier">other_user</span>)
-  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@following</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">other_user</span>.<span class="ruby-identifier">handle</span>)
-<span class="ruby-keyword">end</span></pre>
-            </div><!-- following-3F-source -->
-            
-          </div>
-
-          
-
-          
-        </div><!-- following-3F-method -->
-
-      
-        <div id="tweet-method" class="method-detail ">
-          <a name="method-i-tweet"></a>
-
-          
-          <div class="method-heading">
-            <span class="method-name">tweet</span><span
-              class="method-args">(text, model)</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            <p>Issue a tweet for the user. Creates and returns a <a
-href="Tweet.html">Tweet</a> object and also saves the tweet using the
-provided model class.</p>
-
-<h3>ARGS:</h3>
-<ul><li>
-<p>text should be a string of the tweet’s text.</p>
-</li><li>
-<p>model should be a storage model class that knows</p>
-</li></ul>
-
-<p>how to save a tweet.</p>
-            
-
-            
-            <div class="method-source-code" id="tweet-source">
-<pre>
-<span class="ruby-comment"># File lib/user.rb, line 58</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">tweet</span>(<span class="ruby-identifier">text</span>, <span class="ruby-identifier">model</span>)
-  <span class="ruby-identifier">tweet</span> = <span class="ruby-constant">Tweet</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">text</span>, <span class="ruby-keyword">self</span>)
-  <span class="ruby-identifier">model</span>.<span class="ruby-identifier">save_tweet</span>(<span class="ruby-identifier">tweet</span>)
-  <span class="ruby-keyword">return</span> <span class="ruby-identifier">tweet</span>
-<span class="ruby-keyword">end</span></pre>
-            </div><!-- tweet-source -->
-            
-          </div>
-
-          
-
-          
-        </div><!-- tweet-method -->
-
-      
-        <div id="unfollow_user-method" class="method-detail ">
-          <a name="method-i-unfollow_user"></a>
-
-          
-          <div class="method-heading">
-            <span class="method-name">unfollow_user</span><span
-              class="method-args">(user)</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            <p>Unfollow a users tweets.</p>
-
-<h3>ARGS:</h3>
-<ul><li>
-<p>user should be a user object to unfollow.</p>
-</li></ul>
-            
-
-            
-            <div class="method-source-code" id="unfollow_user-source">
-<pre>
-<span class="ruby-comment"># File lib/user.rb, line 44</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">unfollow_user</span>(<span class="ruby-identifier">user</span>)
-  <span class="ruby-ivar">@following</span>.<span class="ruby-identifier">delete_if</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">handle</span><span class="ruby-operator">|</span> <span class="ruby-identifier">handle</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">handle</span>}
-  <span class="ruby-ivar">@modified</span> = <span class="ruby-keyword">true</span>
-<span class="ruby-keyword">end</span></pre>
-            </div><!-- unfollow_user-source -->
-            
-          </div>
-
-          
-
-          
-        </div><!-- unfollow_user-method -->
-
-      
-      </div><!-- public-instance-method-details -->
-    
     </div><!-- 5Buntitled-5D -->
   
 
