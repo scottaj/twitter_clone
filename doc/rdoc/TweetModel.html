@@ -73,6 +73,8 @@
           
           <li><a href="#method-i-tag_search">#tag_search</a></li>
           
+          <li><a href="#method-i-trending_tags">#trending_tags</a></li>
+          
           <li><a href="#method-i-tweet">#tweet</a></li>
           
         </ul>
@@ -325,7 +327,7 @@ no duplicates.</p>
             
             <div class="method-source-code" id="tag_search-source">
 <pre>
-<span class="ruby-comment"># File lib/tweet_model.rb, line 85</span>
+<span class="ruby-comment"># File lib/tweet_model.rb, line 107</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">tag_search</span>(<span class="ruby-identifier">tag</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-value">50</span>)
   <span class="ruby-identifier">results</span> = []
   <span class="ruby-constant">Tweet</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">tags</span><span class="ruby-operator">:</span> <span class="ruby-node">/#{tag}/</span>).<span class="ruby-identifier">desc</span>(<span class="ruby-value">:timestamp</span>).<span class="ruby-identifier">limit</span>(<span class="ruby-identifier">limit</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">tweet</span><span class="ruby-operator">|</span>
@@ -341,6 +343,58 @@ no duplicates.</p>
 
           
         </div><!-- tag_search-method -->
+
+      
+        <div id="trending_tags-method" class="method-detail ">
+          <a name="method-i-trending_tags"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">trending_tags</span><span
+              class="method-args">(limit = 100)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>Find “trending” tags over the last n tweets. Searches up to limit tweets
+and aggregates their tags into a 2d array of [tag, count] pairs sorted by
+highest tag count.</p>
+
+<h3>ARGS:</h3>
+<ul><li>
+<p>limit should be the maximum number of tweets you want searched.</p>
+</li></ul>
+
+<p>The default limit is 100.</p>
+            
+
+            
+            <div class="method-source-code" id="trending_tags-source">
+<pre>
+<span class="ruby-comment"># File lib/tweet_model.rb, line 81</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">trending_tags</span>(<span class="ruby-identifier">limit</span> = <span class="ruby-value">100</span>)
+  <span class="ruby-identifier">tags</span> = {}
+  <span class="ruby-constant">Tweet</span>.<span class="ruby-identifier">where</span>().<span class="ruby-identifier">desc</span>(<span class="ruby-value">:timestamp</span>).<span class="ruby-identifier">limit</span>(<span class="ruby-identifier">limit</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">tweet</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">tweet</span>.<span class="ruby-identifier">tags</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">tag</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">tags</span>[<span class="ruby-identifier">tag</span>]
+        <span class="ruby-identifier">tags</span>[<span class="ruby-identifier">tag</span>] <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">tags</span>[<span class="ruby-identifier">tag</span>] = <span class="ruby-value">1</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">tags</span>.<span class="ruby-identifier">to_a</span>.<span class="ruby-identifier">sort</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">x</span>, <span class="ruby-identifier">y</span><span class="ruby-operator">|</span> <span class="ruby-identifier">y</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">x</span>[<span class="ruby-value">1</span>]}
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- trending_tags-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- trending_tags-method -->
 
       
         <div id="tweet-method" class="method-detail ">
