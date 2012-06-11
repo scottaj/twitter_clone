@@ -38,6 +38,16 @@ class TwitterClone < Sinatra::Base
     @@tweet_model = TweetModel.new()
   end
 
+  helpers do
+    def validate_tweet_user_tags(tweet_list)
+      valid = []
+      tagged =[]
+      tweet_list.each {|tweet| tagged = tagged | tweet.text.scan(/@\S+/)}
+      tagged.each {|user| valid << user if @@user_model.user_exists?(user[/[^@]+/])}
+      return valid.uniq
+    end
+  end
+  
   ##
   # Main routing table for application.
   before /^(?!\/(login|signup)).*$/i do
@@ -68,6 +78,7 @@ class TwitterClone < Sinatra::Base
     trending = @@tweet_model.trending_tags()
     user_tweets = @@tweet_model.get_tweets_for_user(session[:user])
     followed_tweets = @@tweet_model.get_tweets_from_followers(session[:user])
+    validated = validate_tweet_user_tags(user_tweets) | validate_tweet_user_tags(followed_tweets)
     slim :index, locals: {page_title: session[:user],
       handle: session[:user],
       page_user: page_user,
@@ -75,7 +86,8 @@ class TwitterClone < Sinatra::Base
       trending: trending,
       offset: request.cookies["offset"],
       user_tweets: user_tweets,
-      followed_tweets: followed_tweets}
+      followed_tweets: followed_tweets,
+      validated: validated}
   end
 
   post '/home' do
@@ -216,18 +228,22 @@ class TwitterClone < Sinatra::Base
       page_user = @@user_model.get_user_by_handle(handle)
       tweets = @@tweet_model.get_tweets_for_user(handle)
       following = @@user_model.following?(session[:user], handle)
+      validated = validate_tweet_user_tags(tweets)
       slim :user, locals: {page_title: handle,
         handle: handle,
         page_user: page_user,
         offset: request.cookies["offset"],
         tweets: tweets,
-        following: following}
+        following: following,
+        validated: validated}
     elsif session[:tag_page] == params[:id][/[^#]+/]
       tweets = @@tweet_model.get_tweets_for_tag(session[:tag_page])
+      validated = validate_tweet_user_tags(tweets)
       slim :tag, locals: {page_title: params[:id],
         tag: "##{params[:id]}",
         offset: request.cookies["offset"],
-        tweets: tweets}
+        tweets: tweets,
+        validated: validated}
     else
       redirect "/search?searchq=#{params[:id]}"
     end

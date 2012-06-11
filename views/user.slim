@@ -27,7 +27,7 @@ div class="container-fluid"
       div class="row-fluid"
         div class="span2"
         div class="span6" id="feed"
-          ==render :slim, :"tweet_list", locals: {title: "#{handle}'s Tweets", id: "tweets", offset: offset, tweets: tweets}
+          ==render :slim, :"tweet_list", locals: {title: "#{handle}'s Tweets", id: "tweets", offset: offset, tweets: tweets, validated: validated}
       javascript:
           $(function(){
             setInterval(function(){

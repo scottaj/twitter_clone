@@ -7,7 +7,7 @@ div class="container-fluid"
       div class="row-fluid"
         div class="span4"
         div class="span10" id="tag"
-          ==render :slim, :"tweet_list", locals: {title: "Tweets with tag #{tag}", id: "tweets", offset: offset, tweets: tweets}
+          ==render :slim, :"tweet_list", locals: {title: "Tweets with tag #{tag}", id: "tweets", offset: offset, tweets: tweets, validated: validated}
       javascript:
           $(function(){
             setInterval(function(){
