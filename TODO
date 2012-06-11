@@ -3,6 +3,7 @@ TODO List:
       x - follow/unfollow button.
       x - autocomplete for searches.
      - Make pages perttier and less empty.
-       - box below users you're following with random users you aren't following.
+      x - box below users you're following with random users you aren't following.
+      	  - Done, but the selection of users should be more random...
        - Popular tags box?
     x - Update rdoc
