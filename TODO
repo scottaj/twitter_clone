@@ -1,7 +1,8 @@
 TODO List:
      - Experiment with ajax instead of page loads.
-       - follow/unfollow button.
-       - autocomplete for searches.
+      x - follow/unfollow button.
+      x - autocomplete for searches.
      - Make pages perttier and less empty.
        - box below users you're following with random users you aren't following.
        - Popular tags box?
+    x - Update rdoc
