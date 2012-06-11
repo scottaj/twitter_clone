@@ -63,6 +63,14 @@ class UserModel
     return false
   end
 
+  ##
+  # Find some users that the pecified user isn't following.
+  # Returns an array of user handles.
+  #
+  # ===ARGS:
+  # - handle is a User handle, a String.
+  # - limit should be the maximum number of User handles you want returned.
+  # The default limit is 10.
   def find_not_following(handle, limit = 10)
     not_followed = []
     followed = User.where(handle: handle).first.following

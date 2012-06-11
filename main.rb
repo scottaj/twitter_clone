@@ -16,6 +16,7 @@ class TwitterClone < Sinatra::Base
   # ==App configuration
   # - Enables sessions
   # - Creates Mongoid connection
+  # - Enable pretty html output from slim.
   # - Create models for tweets and users.
   configure do
     enable :sessions
@@ -63,11 +64,13 @@ class TwitterClone < Sinatra::Base
 
   get '/home' do
     page_user = @@user_model.get_user_by_handle(session[:user])
+    not_following = @@user_model.find_not_following(session[:user]).shuffle
     user_tweets = @@tweet_model.get_tweets_for_user(session[:user])
     followed_tweets = @@tweet_model.get_tweets_from_followers(session[:user])
     slim :index, locals: {page_title: session[:user],
       handle: session[:user],
       page_user: page_user,
+      not_following: not_following,
       offset: request.cookies["offset"],
       user_tweets: user_tweets,
       followed_tweets: followed_tweets}

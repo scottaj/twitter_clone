@@ -1,5 +1,5 @@
-h2 = "#{handle} is following:"
+h2 = title
 ul
-- page_user.following.to_a.shuffle.each do |u|
+- users.each do |u|
   li
     a href="/users/#{u}" = u  

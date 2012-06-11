@@ -37,4 +37,4 @@ div class="container-fluid"
               }, 60000);
               });
     div class="well span4"
-      ==render :slim, :'user_following', locals: {handle: handle, page_user: page_user}
+      ==render :slim, :'user_following', locals: {title: "#{handle} is following:", users: page_user.following.shuffle}
