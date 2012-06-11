@@ -29,6 +29,8 @@ class UserModel
     return User.where(handle: handle).first
   end
 
+  ##
+  # 
   def follow_user(follower, following)
     User.where(handle: follower).first.push(:following, following)
   end
@@ -44,7 +46,7 @@ class UserModel
 
   def user_search(handle, limit = 50)
     results = []
-    User.where(handle: /#{handle}/).limit(limit).each do |user|
+    User.where(handle: /#{handle}/i).limit(limit).each do |user|
       results << user.handle
     end
     return results

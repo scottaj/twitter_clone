@@ -191,7 +191,7 @@ class TwitterClone < Sinatra::Base
 
   post '/complete' do
     if params[:query].match(/^#\S+$/)
-      data = JSON::dump(@@tweet_model.tag_search(params[:query]))
+      data = JSON::dump(@@tweet_model.tag_search(params[:query][/[^#]+/]))
     elsif params[:query].match(/^\S+$/)
       data = JSON::dump(@@user_model.user_search(params[:query]))
     else

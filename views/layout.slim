@@ -16,7 +16,6 @@ html
         $('#typeahead').typeahead( {
           source: function (typeahead, query) {
             return $.post('/complete', { query: query }, function (data) {
-              alert("here");
               return typeahead.process(data);
               });
               }
@@ -32,7 +31,7 @@ html
         ul class="nav pull-right"
           li
             form class="navbar-search pull-right" action="/search" method="get"
-              input type="text" class="search-query span2" data-provide="typeahead" data-items="10" id="typeahead" name="searchq" placeholder="Search Users or #Tags"
+              input type="text" class="search-query span2" data-provide="typeahead" data-items="6" id="typeahead" name="searchq" placeholder="Search Users or #Tags"
           li class="divider-vertical"
           li
             a href=@navbar_option = @navbar_text
