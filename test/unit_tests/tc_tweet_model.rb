@@ -3,7 +3,7 @@ require 'mongoid'
 
 
 Mongoid.configure do |config|
-  name = "rcr_app_testing"
+  name = "twitter_app_testing"
   host = "localhost"
   config.master = Mongo::Connection.new.db(name)
 end
@@ -73,16 +73,32 @@ class TestTweetModel < Test::Unit::TestCase
     assert_equal([], @tweet_model.get_tweets_from_followers("u3"), "Testing a user not following anyone.")
   end
 
+  def test_trending_tags()
+    t1 = @tweet_model.tweet("test test #test #brolife", "u2")
+    sleep(2)
+    t2 = @tweet_model.tweet("#test this", "u3")
+    sleep(3)
+    t3 = @tweet_model.tweet("last #test yo. #brolife", "u2")
+    sleep(1)
+    t4 = @tweet_model.tweet("Test from u2 #hashtag #test", "u2")
+    sleep(2)
+    t5 = @tweet_model.tweet("#test from u3 #tag #hashtag", "u3")
+    sleep(3)
+    t6 = @tweet_model.tweet("last #test yo. #hashtag", "u2")
+
+    assert_equal([["test", 6], ["hashtag", 3], ["brolife", 2], ["tag", 1]], @tweet_model.trending_tags())
+  end
+  
   def test_tag_search()
     t1 = @tweet_model.tweet("Test #from u2 #hashtag #cook", "u2")
     sleep(2)
     t2 = @tweet_model.tweet("test #from u3 #tag #crook", "u3")
     sleep(3)
     t3 = @tweet_model.tweet("last test yo. #fro", "u2")
-    assert_equal(["fro", "from"], @tweet_model.tag_search("f"))
-    assert_equal(["from"], @tweet_model.tag_search("from"))
-    assert_equal(["tag", "hashtag"], @tweet_model.tag_search("ta"))
-    assert_equal(["cook"], @tweet_model.tag_search("co"))
+    assert_equal(["#fro", "#from"], @tweet_model.tag_search("f"))
+    assert_equal(["#from"], @tweet_model.tag_search("from"))
+    assert_equal(["#tag", "#hashtag"], @tweet_model.tag_search("ta"))
+    assert_equal(["#cook"], @tweet_model.tag_search("co"))
     assert_equal([], @tweet_model.tag_search("zi"))
   end
 end

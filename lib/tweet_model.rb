@@ -70,6 +70,20 @@ class TweetModel
     return tweets[0...limit]
   end
 
+  def trending_tags(limit = 100)
+    tags = {}
+    Tweet.where().desc(:timestamp).limit(limit).each do |tweet|
+      tweet.tags.each do |tag|
+        if tags[tag]
+          tags[tag] += 1
+        else
+          tags[tag] = 1
+        end
+      end
+    end
+    return tags.to_a.sort {|x, y| y[1] <=> x[1]}
+  end
+  
   ##
   # Search all tweets starting with the most recent for a tag that matches
   # the provided query. Up to limit Tweets will be checked, however since
