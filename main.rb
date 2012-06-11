@@ -169,10 +169,12 @@ class TwitterClone < Sinatra::Base
 
   post '/tweet' do
     @@tweet_model.tweet(params[:tweet_text], session[:user])
+    tweets = @@tweet_model.get_tweets_for_user(session[:user])
     slim :tweet_list, layout: false, locals: {title: "My Tweets",
       id: "user",
       offset: request.cookies["offset"],
-      tweets: @@tweet_model.get_tweets_for_user(session[:user])}
+      tweets: tweets,
+      validated: validate_tweet_user_tags(tweets)}
   end
 
   post '/update/check' do
@@ -190,24 +192,30 @@ class TwitterClone < Sinatra::Base
   end
 
   post '/update/news' do
+    tweets = @@tweet_model.get_tweets_from_followers(params[:handle])
     slim :tweet_list, layout: false, locals: {title: "What is Happening",
       id: "tweets",
       offset: request.cookies["offset"],
-      tweets: @@tweet_model.get_tweets_from_followers(params[:handle])}
+      tweets: tweets,
+      validated: validate_tweet_user_tags(tweets)}
   end
 
   post '/update/user' do
+    tweets = @@tweet_model.get_tweets_for_user(params[:handle])
     slim :tweet_list, layout: false, locals: {title: params[:handle],
       id: "tweets",
       offset: request.cookies["offset"],
-      tweets: @@tweet_model.get_tweets_for_user(params[:handle])}
+      tweets: tweets,
+      validated: validate_tweet_user_tags(tweets)}
   end
 
   post '/update/tag' do
+    tweets = @@tweet_model.get_tweets_for_tag(params[:tag][/[^#]+/])
     slim :tweet_list, layout: false, locals: {title: "Tweets with tag #{params[:tag]}",
       id: "tweets",
       offset: request.cookies["offset"],
-      tweets: @@tweet_model.get_tweets_for_tag(params[:tag][/[^#]+/])}
+      tweets: tweets,
+      validated: validate_tweet_user_tags(tweets)}
   end
 
   post '/complete' do
