@@ -70,6 +70,14 @@ class TweetModel
     return tweets[0...limit]
   end
 
+  ##
+  # Find "trending" tags over the last n tweets. Searches up to limit
+  # tweets and aggregates their tags into a 2d array of [tag, count] pairs
+  # sorted by highest tag count.
+  #
+  # ===ARGS:
+  # - limit should be the maximum number of tweets you want searched.
+  # The default limit is 100.
   def trending_tags(limit = 100)
     tags = {}
     Tweet.where().desc(:timestamp).limit(limit).each do |tweet|

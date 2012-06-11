@@ -1,0 +1,6 @@
+h2 = title
+ul
+- size.times do |n|
+    - if tags[n]
+        li
+          a href="/tags/#{tags[n][0]}" = "#{tags[n][0]} (#{tags[n][1]})"  

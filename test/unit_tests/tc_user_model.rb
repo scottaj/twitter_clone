@@ -2,7 +2,7 @@ require 'bundler/setup'
 require 'mongoid'
 
 Mongoid.configure do |config|
-  name = "rcr_app_testing"
+  name = "twitter_app_testing"
   host = "localhost"
   config.master = Mongo::Connection.new.db(name)
 end

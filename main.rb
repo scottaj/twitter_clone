@@ -28,7 +28,7 @@ class TwitterClone < Sinatra::Base
         db = conn.db(uri.path.gsub(/^\//, ''))
         config.master = db
       else
-        config.master = Mongo::Connection.new.db("rcr_app")
+        config.master = Mongo::Connection.new.db("twitter_app")
       end
     end
 
@@ -65,12 +65,14 @@ class TwitterClone < Sinatra::Base
   get '/home' do
     page_user = @@user_model.get_user_by_handle(session[:user])
     not_following = @@user_model.find_not_following(session[:user]).shuffle
+    trending = @@tweet_model.trending_tags()
     user_tweets = @@tweet_model.get_tweets_for_user(session[:user])
     followed_tweets = @@tweet_model.get_tweets_from_followers(session[:user])
     slim :index, locals: {page_title: session[:user],
       handle: session[:user],
       page_user: page_user,
       not_following: not_following,
+      trending: trending,
       offset: request.cookies["offset"],
       user_tweets: user_tweets,
       followed_tweets: followed_tweets}
