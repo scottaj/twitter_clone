@@ -15,7 +15,7 @@ class TweetModel
   # - user should be a User handle, a String.
   def tweet(text, user)
     tags = []
-    text.scan(/#\S+/) {|match| tags << match[/[^#]+/]}
+    text.scan(/#\S+/) {|match| tags << match[/[^#][a-z0-9_-]+/i]}
     Tweet.create(text: text, user: user, timestamp: Time.now.utc, tags: tags)
   end
 
