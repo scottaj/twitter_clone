@@ -31,6 +31,8 @@ class TwitterClone < Sinatra::Base
       end
     end
 
+    Slim::Engine.set_default_options :pretty => true
+    
     @@user_model = UserModel.new()
     @@tweet_model = TweetModel.new()
   end
