@@ -7,4 +7,5 @@ TODO List:
       	  - Done, but the selection of users should be more random...
       x - Popular tags box?
   x - Update rdoc
-    - Add @ tagging of users.    
+   x - Add @ tagging of users.
+      - Works, but need to validate this somehow...

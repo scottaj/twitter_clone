@@ -84,7 +84,10 @@ class TwitterClone < Sinatra::Base
   end  
 
   get '/login' do
-    slim :login, locals: {page_title: "Login", message: ""}
+    unless session[:user]
+      slim :login, locals: {page_title: "Login", message: ""}
+    else
+      redirect '/'
   end
 
   post '/login' do
