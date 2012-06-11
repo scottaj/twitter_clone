@@ -63,6 +63,14 @@ class UserModel
     return false
   end
 
+  def find_not_following(handle, limit = 10)
+    not_followed = []
+    followed = User.where(handle: handle).first.following
+    followed << handle
+    User.not_in(handle: followed).limit(limit).each {|u| not_followed << u.handle}
+    return not_followed
+  end
+
   ##
   # Search all users for a handle that matches the provided sting via
   # regex. Returns up to limit matching users in no partiucular order.

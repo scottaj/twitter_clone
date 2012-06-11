@@ -66,6 +66,17 @@ class TestUserModel < Test::Unit::TestCase
     assert_equal(nil, @user_model.user_exists?("retested"), "testing that a string with a username in it will not return true.")
   end
 
+  def test_find_not_following()
+    User.create(handle: "test", following: [])
+    User.create(handle: "u1", following: ["test"])
+    User.create(handle: "u2", following: ["u1", "test"])
+    User.create(handle: "user", following: ["u1", "u2"])
+    User.create(handle: "testy", following: ["test", "u1", "u2", "user"])
+    assert_equal(["u1", "u2", "user", "testy"], @user_model.find_not_following("test"), "Test user not following anyone")
+    assert_equal(["test", "testy"], @user_model.find_not_following("user"), "Test normal user")
+    assert_equal([], @user_model.find_not_following("testy"), "Test user following everyone")
+  end
+  
   def test_user_search()
     User.create(handle: "test", following: [])
     User.create(handle: "u1", following: [])
