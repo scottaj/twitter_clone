@@ -157,7 +157,7 @@
             
             <div class="method-source-code" id="unknown-source">
 <pre>
-<span class="ruby-comment"># File main.rb, line 42</span>
+<span class="ruby-comment"># File main.rb, line 43</span>
   <span class="ruby-identifier">before</span> <span class="ruby-regexp">/^(?!\/(login|signup)).*$/</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">redirect</span> <span class="ruby-string">'/login'</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>]
     <span class="ruby-ivar">@navbar_option</span> = <span class="ruby-string">&quot;/logout&quot;</span>
@@ -182,11 +182,13 @@
 
   <span class="ruby-identifier">get</span> <span class="ruby-string">'/home'</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">page_user</span> = <span class="ruby-identifier">@@user_model</span>.<span class="ruby-identifier">get_user_by_handle</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>])
+    <span class="ruby-identifier">not_following</span> = <span class="ruby-identifier">@@user_model</span>.<span class="ruby-identifier">find_not_following</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>]).<span class="ruby-identifier">shuffle</span>
     <span class="ruby-identifier">user_tweets</span> = <span class="ruby-identifier">@@tweet_model</span>.<span class="ruby-identifier">get_tweets_for_user</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>])
     <span class="ruby-identifier">followed_tweets</span> = <span class="ruby-identifier">@@tweet_model</span>.<span class="ruby-identifier">get_tweets_from_followers</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>])
     <span class="ruby-identifier">slim</span> <span class="ruby-value">:index</span>, <span class="ruby-identifier">locals</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">page_title</span><span class="ruby-operator">:</span> <span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>],
       <span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>],
       <span class="ruby-identifier">page_user</span><span class="ruby-operator">:</span> <span class="ruby-identifier">page_user</span>,
+      <span class="ruby-identifier">not_following</span><span class="ruby-operator">:</span> <span class="ruby-identifier">not_following</span>,
       <span class="ruby-identifier">offset</span><span class="ruby-operator">:</span> <span class="ruby-identifier">request</span>.<span class="ruby-identifier">cookies</span>[<span class="ruby-string">&quot;offset&quot;</span>],
       <span class="ruby-identifier">user_tweets</span><span class="ruby-operator">:</span> <span class="ruby-identifier">user_tweets</span>,
       <span class="ruby-identifier">followed_tweets</span><span class="ruby-operator">:</span> <span class="ruby-identifier">followed_tweets</span>}

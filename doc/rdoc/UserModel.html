@@ -65,6 +65,8 @@
         <h3 class="section-header">Methods</h3>
         <ul class="link-list">
           
+          <li><a href="#method-i-find_not_following">#find_not_following</a></li>
+          
           <li><a href="#method-i-follow_user">#follow_user</a></li>
           
           <li><a href="#method-i-following-3F">#following?</a></li>
@@ -149,6 +151,54 @@ a mongo database.</p>
       
       <div id="public-instance-method-details" class="method-section section">
         <h3 class="section-header">Public Instance Methods</h3>
+
+      
+        <div id="find_not_following-method" class="method-detail ">
+          <a name="method-i-find_not_following"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">find_not_following</span><span
+              class="method-args">(handle, limit = 10)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>Find some users that the pecified user isn’t following. Returns an array of
+user handles.</p>
+
+<h3>ARGS:</h3>
+<ul><li>
+<p>handle is a <a href="User.html">User</a> handle, a String.</p>
+</li><li>
+<p>limit should be the maximum number of <a href="User.html">User</a> handles
+you want returned.</p>
+</li></ul>
+
+<p>The default limit is 10.</p>
+            
+
+            
+            <div class="method-source-code" id="find_not_following-source">
+<pre>
+<span class="ruby-comment"># File lib/user_model.rb, line 74</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_not_following</span>(<span class="ruby-identifier">handle</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-value">10</span>)
+  <span class="ruby-identifier">not_followed</span> = []
+  <span class="ruby-identifier">followed</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-identifier">handle</span>).<span class="ruby-identifier">first</span>.<span class="ruby-identifier">following</span>
+  <span class="ruby-identifier">followed</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">handle</span>
+  <span class="ruby-constant">User</span>.<span class="ruby-identifier">not_in</span>(<span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-identifier">followed</span>).<span class="ruby-identifier">limit</span>(<span class="ruby-identifier">limit</span>).<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span> <span class="ruby-identifier">not_followed</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">handle</span>}
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">not_followed</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- find_not_following-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- find_not_following-method -->
 
       
         <div id="follow_user-method" class="method-detail ">
@@ -395,7 +445,7 @@ you want returned.</p>
             
             <div class="method-source-code" id="user_search-source">
 <pre>
-<span class="ruby-comment"># File lib/user_model.rb, line 75</span>
+<span class="ruby-comment"># File lib/user_model.rb, line 91</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">user_search</span>(<span class="ruby-identifier">handle</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-value">50</span>)
   <span class="ruby-identifier">results</span> = []
   <span class="ruby-constant">User</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-node">/#{handle}/</span>).<span class="ruby-identifier">limit</span>(<span class="ruby-identifier">limit</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">user</span><span class="ruby-operator">|</span>
