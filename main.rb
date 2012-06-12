@@ -41,7 +41,7 @@ class TwitterClone < Sinatra::Base
   helpers do
     def validate_tweet_user_tags(tweet_list)
       valid = []
-      tagged =[]
+      tagged = []
       tweet_list.each {|tweet| tagged = tagged | tweet.text.scan(/@[a-z0-9_-]+/i)}
       tagged.each {|user| valid << user if @@user_model.user_exists?(user[/[^@]+/])}
       return valid.uniq
