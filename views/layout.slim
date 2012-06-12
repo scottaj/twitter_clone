@@ -15,7 +15,7 @@ html
       $(function(){
         $('#typeahead').typeahead( {
           source: function (typeahead, query) {
-            return $.post('/complete', { query: query }, function (data) {
+            return $.post('/update/complete', { query: query }, function (data) {
               return typeahead.process(data);
               });
               }

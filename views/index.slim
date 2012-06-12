@@ -33,7 +33,7 @@ div class="container-fluid"
               event.preventDefault();                                         
               var text = $("#textarea").val();
               $("#textarea").val("");
-              $.post('/tweet', {tweet_text: text}, function( data ) {                 
+              $.post('/update/tweet', {tweet_text: text}, function( data ) {                 
                 $("#user").remove();
                 $("#posts").append( data );
                 }

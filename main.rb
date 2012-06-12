@@ -171,7 +171,7 @@ class TwitterClone < Sinatra::Base
     redirect "/#{params[:tag]}"
   end
 
-  post '/tweet' do
+  post '/update/tweet' do
     @@tweet_model.tweet(params[:tweet_text], session[:user])
     tweets = @@tweet_model.get_tweets_for_user(session[:user])
     slim :tweet_list, layout: false, locals: {title: "My Tweets",
@@ -222,7 +222,7 @@ class TwitterClone < Sinatra::Base
       validated: validate_tweet_user_tags(tweets)}
   end
 
-  post '/complete' do
+  post '/update/complete' do
     if params[:query].match(/^#\S+$/)
       data = JSON::dump(@@tweet_model.tag_search(params[:query][/[^#]+/]))
     elsif params[:query].match(/^\S+$/)
