@@ -9,8 +9,9 @@ div class="container-fluid"
       javascript:           
           $(function() {
           $("#follow").submit(function(event) {             
+          var handle = $("#name").text();
           event.preventDefault();                        
-            $.post('/follow', {no_redirect: true}, function( data ) {
+            $.post('/follow', {no_redirect: true, handle: handle}, function( data ) {
             if($("#follow-button").hasClass("btn-success")) {
             $("#follow-button").removeClass("btn-success");
             $("#follow-button").addClass("btn-warning");

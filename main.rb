@@ -173,12 +173,12 @@ class TwitterClone < Sinatra::Base
   end
 
   post '/follow' do
-    if @@user_model.following?(session[:user], session[:user_page])
-      @@user_model.unfollow_user(session[:user], session[:user_page])
+    if @@user_model.following?(session[:user], params[:handle])
+      @@user_model.unfollow_user(session[:user], params[:handle])
     else
-      @@user_model.follow_user(session[:user], session[:user_page])
+      @@user_model.follow_user(session[:user], params[:handle])
     end
-    redirect "/#{session[:user_page]}" unless params[:no_redirect]
+    redirect "/#{params[:handle]}" unless params[:no_redirect]
   end
 
   get '/search' do
