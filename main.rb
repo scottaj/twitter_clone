@@ -59,10 +59,10 @@ class TwitterClone < Sinatra::Base
     redirect '/login' unless session[:user]
   end
 
-  get '/:id' do
-    if session[:user_page] == params[:id]
+  get '/:handle' do
+    if session[:user_page] == params[:handle]
       session[:user_page] = nil
-      handle = @@user_model.user_exists?(params[:id])
+      handle = @@user_model.user_exists?(params[:handle])
       page_user = @@user_model.get_user_by_handle(handle)
       tweets = @@tweet_model.get_tweets_for_user(handle)
       following = @@user_model.following?(session[:user], handle)
@@ -75,13 +75,19 @@ class TwitterClone < Sinatra::Base
         tweets: tweets,
         following: following,
         validated: validated}
-    elsif session[:tag_page] == params[:id][/[^#]+/]
+    else
+      pass
+    end
+  end
+
+  get '/:tag' do
+    if session[:tag_page] == params[:tag][/[^#]+/]
       tweets = @@tweet_model.get_tweets_for_tag(session[:tag_page])
       validated = validate_tweet_user_tags(tweets)
       session[:tag_page] = nil
       
-      slim :tag, locals: {page_title: params[:id],
-        tag: "##{params[:id]}",
+      slim :tag, locals: {page_title: params[:tag],
+        tag: "##{params[:tag]}",
         offset: request.cookies["offset"],
         tweets: tweets,
         validated: validated}
@@ -176,16 +182,17 @@ class TwitterClone < Sinatra::Base
   end
 
   get '/search' do
-    query = ""
-    query = params[:searchq][/\S+/] if params[:searchq]
-    if query[/#.+/]
-      query = query[/[^#]+/]
-      redirect "/tags/#{query}" if @@tweet_model.get_tweets_for_tag(query, 1).length == 1
-      slim :bad_search, locals: {page_title: "No Results Found", query: "##{query}"}
-    elsif query[/.+/]
-      redirect "/users/#{query}" if @@user_model.user_exists?(query)
-      slim :bad_search, locals: {page_title: "No Results Found", query: "User #{query}"}
-    else
+    begin
+      query = params[:searchq][/\S+/]
+      if query.match(/#.+/)
+        query = query[/[^#]+/]
+        redirect "/tags/#{query}" if @@tweet_model.get_tweets_for_tag(query, 1).length == 1
+        slim :bad_search, locals: {page_title: "No Results Found", query: "##{query}"}
+      elsif query.match(/.+/)
+        redirect "/users/#{query}" if @@user_model.user_exists?(query)
+        slim :bad_search, locals: {page_title: "No Results Found", query: "User #{query}"}
+      end
+    rescue NoMethodError
       slim :bad_search, locals: {page_title: "No Query Provided", query: "Page"}
     end
   end  
