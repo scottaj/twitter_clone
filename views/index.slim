@@ -12,7 +12,7 @@ div class="container-fluid"
       div class="row-fluid"
         div class="span2"
         div class="span6" id="news"
-          ==render :slim, :"tweet_list", locals: {title: "What is Happening", id: "following", offset: offset, tweets: followed_tweets, validated: validated}
+          ==render :slim, :"tweet_list", locals: {title: "What's Happening", id: "following", offset: offset, tweets: followed_tweets, validated: validated}
         
         javascript:
           $(function(){
@@ -39,10 +39,11 @@ div class="container-fluid"
                 }
                 );
                 });
-                });    
-    div class="well span4"
-      ==render :slim, :'user_following', locals: {title: "#{handle} is following:", users: page_user.following.shuffle}
-    div class="well span4"
-      ==render :slim, :'user_following', locals: {title: "Have you considered following:", users: not_following}
-    div class="well span4"
-      ==render :slim, :"tag_box", locals: {title: "Trending Tags", size: 10, tags: trending}
+                });
+    div class="span4"    
+      div class="well"
+        ==render :slim, :'user_following', locals: {title: "#{handle} is following:", users: page_user.following.shuffle}
+      div class="well"
+        ==render :slim, :'user_following', locals: {title: "Have you considered following:", users: not_following}
+      div class="well"
+        ==render :slim, :"tag_box", locals: {title: "Trending Tags", size: 10, tags: trending}

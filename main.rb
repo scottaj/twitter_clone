@@ -236,7 +236,7 @@ class TwitterClone < Sinatra::Base
 
   post '/update/news' do
     tweets = @@tweet_model.get_tweets_from_followers(params[:handle])
-    slim :tweet_list, layout: false, locals: {title: "What is Happening",
+    slim :tweet_list, layout: false, locals: {title: "What's Happening",
       id: "tweets",
       offset: request.cookies["offset"],
       tweets: tweets,
