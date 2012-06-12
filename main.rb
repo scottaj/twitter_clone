@@ -42,7 +42,7 @@ class TwitterClone < Sinatra::Base
     def validate_tweet_user_tags(tweet_list)
       valid = []
       tagged =[]
-      tweet_list.each {|tweet| tagged = tagged | tweet.text.scan(/@\[a-z0-9_]+/i)}
+      tweet_list.each {|tweet| tagged = tagged | tweet.text.scan(/@[a-z0-9_-]+/i)}
       tagged.each {|user| valid << user if @@user_model.user_exists?(user[/[^@]+/])}
       return valid.uniq
     end
@@ -122,8 +122,12 @@ class TwitterClone < Sinatra::Base
     if exists
       slim :signup, locals: {page_title: "Sign Up", message: "Selected handle is already in use by someone else!"}
     else
-      User.create(handle: params[:handle], following: [])
-      redirect '/'
+      if params[:handle].match(/^[a-z0-9_-]+$/i)
+        User.create(handle: params[:handle], following: [])
+        redirect '/'
+      else
+        slim :signup, locals: {page_title: "Sign Up", message: "Selected handle has invalid characters!"}
+      end
     end
   end
 
