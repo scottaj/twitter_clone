@@ -57,15 +57,46 @@ class TwitterClone < Sinatra::Base
   end
   
   before "/login" do
-    redirect '/' if session[:user]
+    # redirect '/' if session[:user]
     @navbar_option = "/signup"
     @navbar_text = "Sign Up"
   end
 
   before "/signup" do
-    redirect '/' if session[:user]
+    # redirect '/' if session[:user]
     @navbar_option = "/login"
     @navbar_text = "Login"
+  end
+
+  get '/:id' do
+    if session[:user_page] == params[:id]
+      session[:user_page] = nil
+      handle = @@user_model.user_exists?(params[:id])
+      page_user = @@user_model.get_user_by_handle(handle)
+      tweets = @@tweet_model.get_tweets_for_user(handle)
+      following = @@user_model.following?(session[:user], handle)
+      validated = validate_tweet_user_tags(tweets)
+      
+      slim :user, locals: {page_title: handle,
+        handle: handle,
+        page_user: page_user,
+        offset: request.cookies["offset"],
+        tweets: tweets,
+        following: following,
+        validated: validated}
+    elsif session[:tag_page] == params[:id][/[^#]+/]
+      session[:tag_page] = nil
+      tweets = @@tweet_model.get_tweets_for_tag(session[:tag_page])
+      validated = validate_tweet_user_tags(tweets)
+      
+      slim :tag, locals: {page_title: params[:id],
+        tag: "##{params[:id]}",
+        offset: request.cookies["offset"],
+        tweets: tweets,
+        validated: validated}
+    else
+      pass
+    end
   end
   
   get '/' do
@@ -161,13 +192,11 @@ class TwitterClone < Sinatra::Base
     handle = @@user_model.user_exists?(params[:handle])
     redirect '/home' if handle == session[:user]
     session[:user_page] = handle
-    session[:tag_page] = nil
     redirect "/#{handle}"
   end
 
   get '/tags/:tag' do
     session[:tag_page] = params[:tag][/[^#]+/]
-    session[:user_page] = nil
     redirect "/#{params[:tag]}"
   end
 
@@ -235,32 +264,7 @@ class TwitterClone < Sinatra::Base
   end
 
   get '/:id' do
-    if session[:user_page] == params[:id]
-      handle = @@user_model.user_exists?(params[:id])
-      page_user = @@user_model.get_user_by_handle(handle)
-      tweets = @@tweet_model.get_tweets_for_user(handle)
-      following = @@user_model.following?(session[:user], handle)
-      validated = validate_tweet_user_tags(tweets)
-      
-      slim :user, locals: {page_title: handle,
-        handle: handle,
-        page_user: page_user,
-        offset: request.cookies["offset"],
-        tweets: tweets,
-        following: following,
-        validated: validated}
-    elsif session[:tag_page] == params[:id][/[^#]+/]
-      tweets = @@tweet_model.get_tweets_for_tag(session[:tag_page])
-      validated = validate_tweet_user_tags(tweets)
-      
-      slim :tag, locals: {page_title: params[:id],
-        tag: "##{params[:id]}",
-        offset: request.cookies["offset"],
-        tweets: tweets,
-        validated: validated}
-    else
-      redirect "/search?searchq=#{params[:id]}"
-    end
+    redirect "/search?searchq=#{params[:id]}"
   end
 end
 
