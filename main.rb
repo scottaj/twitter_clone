@@ -236,11 +236,12 @@ class TwitterClone < Sinatra::Base
 
   get '/:id' do
     if session[:user_page] == params[:id]
-      handle = page_user = @@user_model.user_exists?(params[:id])
+      handle = @@user_model.user_exists?(params[:id])
       page_user = @@user_model.get_user_by_handle(handle)
       tweets = @@tweet_model.get_tweets_for_user(handle)
       following = @@user_model.following?(session[:user], handle)
       validated = validate_tweet_user_tags(tweets)
+      
       slim :user, locals: {page_title: handle,
         handle: handle,
         page_user: page_user,
@@ -251,6 +252,7 @@ class TwitterClone < Sinatra::Base
     elsif session[:tag_page] == params[:id][/[^#]+/]
       tweets = @@tweet_model.get_tweets_for_tag(session[:tag_page])
       validated = validate_tweet_user_tags(tweets)
+      
       slim :tag, locals: {page_title: params[:id],
         tag: "##{params[:id]}",
         offset: request.cookies["offset"],
