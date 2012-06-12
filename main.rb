@@ -20,6 +20,7 @@ class TwitterClone < Sinatra::Base
   # - Create models for tweets and users.
   configure do
     enable :sessions
+    set :session_secret, "AMAZINGH0rS3!"
     
     Mongoid.configure do |config|
       if ENV['MONGOHQ_URL']
