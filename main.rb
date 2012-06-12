@@ -177,14 +177,16 @@ class TwitterClone < Sinatra::Base
   end
 
   get '/search' do
-    query = params[:searchq][/\S+/]
+    query = "#{params[:searchq][/\S+/]}"
     if query[/#.+/]
       query = query[/[^#]+/]
       redirect "/tags/#{query}" if @@tweet_model.get_tweets_for_tag(query, 1).length == 1
       slim :bad_search, locals: {page_title: "No Results Found", query: "##{query}"}
-    else
+    elsif query[/.+/]
       redirect "/users/#{query}" if @@user_model.user_exists?(query)
       slim :bad_search, locals: {page_title: "No Results Found", query: "User #{query}"}
+    else
+      slim :bad_search, locals: {page_title: "No Query Provided", query: ""}
     end
   end  
   
