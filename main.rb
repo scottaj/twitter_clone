@@ -50,7 +50,7 @@ class TwitterClone < Sinatra::Base
   
   ##
   # Main routing table for application.
-  before /^(?!\/(login|signup)).*$/i do
+  before /^(?!\/(login|signup|update.*)).*$/i do
     redirect '/login' unless session[:user]
     @navbar_option = "/logout"
     @navbar_text = "Logout"
