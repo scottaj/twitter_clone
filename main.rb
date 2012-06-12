@@ -50,22 +50,13 @@ class TwitterClone < Sinatra::Base
   
   ##
   # Main routing table for application.
-  before /^(?!\/(login|signup|update)).*$/i do
-    redirect '/login' unless session[:user]
+  before do
     @navbar_option = "/logout"
     @navbar_text = "Logout"
   end
   
-  before "/login" do
-    # redirect '/' if session[:user]
-    @navbar_option = "/signup"
-    @navbar_text = "Sign Up"
-  end
-
-  before "/signup" do
-    # redirect '/' if session[:user]
-    @navbar_option = "/login"
-    @navbar_text = "Login"
+  before /^(?!\/(login|signup|update)).*$/i do
+    redirect '/login' unless session[:user]
   end
 
   get '/:id' do
@@ -85,9 +76,9 @@ class TwitterClone < Sinatra::Base
         following: following,
         validated: validated}
     elsif session[:tag_page] == params[:id][/[^#]+/]
-      session[:tag_page] = nil
       tweets = @@tweet_model.get_tweets_for_tag(session[:tag_page])
       validated = validate_tweet_user_tags(tweets)
+      session[:tag_page] = nil
       
       slim :tag, locals: {page_title: params[:id],
         tag: "##{params[:id]}",
@@ -127,6 +118,8 @@ class TwitterClone < Sinatra::Base
   end  
 
   get '/login' do
+    @navbar_option = "/signup"
+    @navbar_text = "Sign Up"
     unless session[:user]
       slim :login, locals: {page_title: "Login", message: ""}
     else
@@ -135,6 +128,8 @@ class TwitterClone < Sinatra::Base
   end
 
   post '/login' do
+    @navbar_option = "/signup"
+    @navbar_text = "Sign Up"
     handle = @@user_model.user_exists?(params[:handle])
     if handle
       session[:user] = handle
@@ -145,10 +140,14 @@ class TwitterClone < Sinatra::Base
   end
 
   get '/signup' do
+    @navbar_option = "/login"
+    @navbar_text = "Login"
     slim :signup, locals: {page_title: "Sign Up", message: ""}
   end
 
   post '/signup' do
+    @navbar_option = "/login"
+    @navbar_text = "Login"
     exists = @@user_model.user_exists?(params[:handle])
     if exists
       slim :signup, locals: {page_title: "Sign Up", message: "Selected handle is already in use by someone else!"}
