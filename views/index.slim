@@ -39,10 +39,12 @@ div class="container-fluid"
                 }
                 );
                 });
-                });    
-    div class="well span4"
-      ==render :slim, :'user_following', locals: {title: "#{handle} is following:", users: page_user.following.shuffle}
-    div class="well span4"
-      ==render :slim, :'user_following', locals: {title: "Have you considered following:", users: not_following}
-    div class="well span4"
-      ==render :slim, :"tag_box", locals: {title: "Trending Tags", size: 10, tags: trending}
+                });
+    div class="span4"
+      br
+      div class="well span12"
+        ==render :slim, :'user_following', locals: {title: "#{handle} is following:", users: page_user.following.shuffle}
+      div class="well span12"
+        ==render :slim, :'user_following', locals: {title: "Have you considered following:", users: not_following}
+      div class="well span12"
+        ==render :slim, :"tag_box", locals: {title: "Trending Tags", size: 10, tags: trending}
