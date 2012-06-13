@@ -60,6 +60,10 @@ class TwitterClone < Sinatra::Base
     redirect '/login' unless session[:user]
   end
 
+  get '/' do
+    redirect '/home'
+  end
+  
   get '/:handle' do
     if session[:user_page] == params[:handle]
       session[:user_page] = nil
@@ -95,10 +99,6 @@ class TwitterClone < Sinatra::Base
     else
       pass
     end
-  end
-  
-  get '/' do
-    redirect '/home'
   end
 
   get '/home' do

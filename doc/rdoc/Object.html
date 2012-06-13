@@ -67,6 +67,8 @@
           
           <li><a href="#method-i-unknown">#unknown</a></li>
           
+          <li><a href="#method-i-validate_tweet_user_tags">#validate_tweet_user_tags</a></li>
+          
         </ul>
       </div>
       
@@ -157,196 +159,9 @@
             
             <div class="method-source-code" id="unknown-source">
 <pre>
-<span class="ruby-comment"># File main.rb, line 43</span>
-  <span class="ruby-identifier">before</span> <span class="ruby-regexp">/^(?!\/(login|signup)).*$/</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">redirect</span> <span class="ruby-string">'/login'</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>]
-    <span class="ruby-ivar">@navbar_option</span> = <span class="ruby-string">&quot;/logout&quot;</span>
-    <span class="ruby-ivar">@navbar_text</span> = <span class="ruby-string">&quot;Logout&quot;</span>
-  <span class="ruby-keyword">end</span>
-  
-  <span class="ruby-identifier">before</span> <span class="ruby-string">&quot;/login&quot;</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">redirect</span> <span class="ruby-string">'/'</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>]
-    <span class="ruby-ivar">@navbar_option</span> = <span class="ruby-string">&quot;/signup&quot;</span>
-    <span class="ruby-ivar">@navbar_text</span> = <span class="ruby-string">&quot;Sign Up&quot;</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">before</span> <span class="ruby-string">&quot;/signup&quot;</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">redirect</span> <span class="ruby-string">'/'</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>]
-    <span class="ruby-ivar">@navbar_option</span> = <span class="ruby-string">&quot;/login&quot;</span>
-    <span class="ruby-ivar">@navbar_text</span> = <span class="ruby-string">&quot;Login&quot;</span>
-  <span class="ruby-keyword">end</span>
-  
-  <span class="ruby-identifier">get</span> <span class="ruby-string">'/'</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">redirect</span> <span class="ruby-string">'/home'</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">get</span> <span class="ruby-string">'/home'</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">page_user</span> = <span class="ruby-identifier">@@user_model</span>.<span class="ruby-identifier">get_user_by_handle</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>])
-    <span class="ruby-identifier">not_following</span> = <span class="ruby-identifier">@@user_model</span>.<span class="ruby-identifier">find_not_following</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>]).<span class="ruby-identifier">shuffle</span>
-    <span class="ruby-identifier">trending</span> = <span class="ruby-identifier">@@tweet_model</span>.<span class="ruby-identifier">trending_tags</span>()
-    <span class="ruby-identifier">user_tweets</span> = <span class="ruby-identifier">@@tweet_model</span>.<span class="ruby-identifier">get_tweets_for_user</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>])
-    <span class="ruby-identifier">followed_tweets</span> = <span class="ruby-identifier">@@tweet_model</span>.<span class="ruby-identifier">get_tweets_from_followers</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>])
-    <span class="ruby-identifier">slim</span> <span class="ruby-value">:index</span>, <span class="ruby-identifier">locals</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">page_title</span><span class="ruby-operator">:</span> <span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>],
-      <span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>],
-      <span class="ruby-identifier">page_user</span><span class="ruby-operator">:</span> <span class="ruby-identifier">page_user</span>,
-      <span class="ruby-identifier">not_following</span><span class="ruby-operator">:</span> <span class="ruby-identifier">not_following</span>,
-      <span class="ruby-identifier">trending</span><span class="ruby-operator">:</span> <span class="ruby-identifier">trending</span>,
-      <span class="ruby-identifier">offset</span><span class="ruby-operator">:</span> <span class="ruby-identifier">request</span>.<span class="ruby-identifier">cookies</span>[<span class="ruby-string">&quot;offset&quot;</span>],
-      <span class="ruby-identifier">user_tweets</span><span class="ruby-operator">:</span> <span class="ruby-identifier">user_tweets</span>,
-      <span class="ruby-identifier">followed_tweets</span><span class="ruby-operator">:</span> <span class="ruby-identifier">followed_tweets</span>}
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">post</span> <span class="ruby-string">'/home'</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">@@tweet_model</span>.<span class="ruby-identifier">tweet</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:tweet_text</span>], <span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>])
-    <span class="ruby-identifier">redirect</span> <span class="ruby-string">'/home'</span>
-  <span class="ruby-keyword">end</span>  
-
-  <span class="ruby-identifier">get</span> <span class="ruby-string">'/login'</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">slim</span> <span class="ruby-value">:login</span>, <span class="ruby-identifier">locals</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">page_title</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;Login&quot;</span>, <span class="ruby-identifier">message</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;&quot;</span>}
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">post</span> <span class="ruby-string">'/login'</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">handle</span> = <span class="ruby-identifier">@@user_model</span>.<span class="ruby-identifier">user_exists?</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:handle</span>])
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">handle</span>
-      <span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>] = <span class="ruby-identifier">handle</span>
-      <span class="ruby-identifier">redirect</span> <span class="ruby-string">'/'</span>
-    <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">slim</span> <span class="ruby-value">:login</span>, <span class="ruby-identifier">locals</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">page_title</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;Login&quot;</span>, <span class="ruby-identifier">message</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;User handle not found!&quot;</span>}
-    <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">get</span> <span class="ruby-string">'/signup'</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">slim</span> <span class="ruby-value">:signup</span>, <span class="ruby-identifier">locals</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">page_title</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;Sign Up&quot;</span>, <span class="ruby-identifier">message</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;&quot;</span>}
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">post</span> <span class="ruby-string">'/signup'</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">exists</span> = <span class="ruby-identifier">@@user_model</span>.<span class="ruby-identifier">user_exists?</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:handle</span>])
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">exists</span>
-      <span class="ruby-identifier">slim</span> <span class="ruby-value">:signup</span>, <span class="ruby-identifier">locals</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">page_title</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;Sign Up&quot;</span>, <span class="ruby-identifier">message</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;Selected handle is already in use by someone else!&quot;</span>}
-    <span class="ruby-keyword">else</span>
-      <span class="ruby-constant">User</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:handle</span>], <span class="ruby-identifier">following</span><span class="ruby-operator">:</span> [])
-      <span class="ruby-identifier">redirect</span> <span class="ruby-string">'/'</span>
-    <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">get</span> <span class="ruby-string">'/logout'</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">session</span>.<span class="ruby-identifier">clear</span>
-    <span class="ruby-identifier">redirect</span> <span class="ruby-string">'/'</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">post</span> <span class="ruby-string">'/follow'</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">@@user_model</span>.<span class="ruby-identifier">following?</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>], <span class="ruby-identifier">session</span>[<span class="ruby-value">:user_page</span>])
-      <span class="ruby-identifier">@@user_model</span>.<span class="ruby-identifier">unfollow_user</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>], <span class="ruby-identifier">session</span>[<span class="ruby-value">:user_page</span>])
-    <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">@@user_model</span>.<span class="ruby-identifier">follow_user</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>], <span class="ruby-identifier">session</span>[<span class="ruby-value">:user_page</span>])
-    <span class="ruby-keyword">end</span>
-    <span class="ruby-identifier">redirect</span> <span class="ruby-node">&quot;/#{session[:user_page]}&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:no_redirect</span>]
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">get</span> <span class="ruby-string">'/search'</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">query</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:searchq</span>][<span class="ruby-regexp">/\S+/</span>]
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">query</span>[<span class="ruby-node">/#.+/</span>]
-      <span class="ruby-identifier">query</span> = <span class="ruby-identifier">query</span>[<span class="ruby-node">/[^#]+/</span>]
-      <span class="ruby-identifier">redirect</span> <span class="ruby-node">&quot;/tags/#{query}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">@@tweet_model</span>.<span class="ruby-identifier">get_tweets_for_tag</span>(<span class="ruby-identifier">query</span>, <span class="ruby-value">1</span>).<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
-      <span class="ruby-identifier">slim</span> <span class="ruby-value">:bad_search</span>, <span class="ruby-identifier">locals</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">page_title</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;No Results Found&quot;</span>, <span class="ruby-identifier">query</span><span class="ruby-operator">:</span> <span class="ruby-node">&quot;##{query}&quot;</span>}
-    <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">redirect</span> <span class="ruby-node">&quot;/users/#{query}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">@@user_model</span>.<span class="ruby-identifier">user_exists?</span>(<span class="ruby-identifier">query</span>)
-      <span class="ruby-identifier">slim</span> <span class="ruby-value">:bad_search</span>, <span class="ruby-identifier">locals</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">page_title</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;No Results Found&quot;</span>, <span class="ruby-identifier">query</span><span class="ruby-operator">:</span> <span class="ruby-node">&quot;User #{query}&quot;</span>}
-    <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">end</span>  
-  
-  <span class="ruby-identifier">get</span> <span class="ruby-string">'/users/:handle'</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">handle</span> = <span class="ruby-identifier">@@user_model</span>.<span class="ruby-identifier">user_exists?</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:handle</span>])
-    <span class="ruby-identifier">redirect</span> <span class="ruby-string">'/home'</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">handle</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>]
-    <span class="ruby-identifier">session</span>[<span class="ruby-value">:user_page</span>] = <span class="ruby-identifier">handle</span>
-    <span class="ruby-identifier">session</span>[<span class="ruby-value">:tag_page</span>] = <span class="ruby-keyword">nil</span>
-    <span class="ruby-identifier">redirect</span> <span class="ruby-node">&quot;/#{handle}&quot;</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">get</span> <span class="ruby-string">'/tags/:tag'</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">session</span>[<span class="ruby-value">:tag_page</span>] = <span class="ruby-identifier">params</span>[<span class="ruby-value">:tag</span>][<span class="ruby-node">/[^#]+/</span>]
-    <span class="ruby-identifier">session</span>[<span class="ruby-value">:user_page</span>] = <span class="ruby-keyword">nil</span>
-    <span class="ruby-identifier">redirect</span> <span class="ruby-node">&quot;/#{params[:tag]}&quot;</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">post</span> <span class="ruby-string">'/tweet'</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">@@tweet_model</span>.<span class="ruby-identifier">tweet</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:tweet_text</span>], <span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>])
-    <span class="ruby-identifier">slim</span> <span class="ruby-value">:tweet_list</span>, <span class="ruby-identifier">layout</span><span class="ruby-operator">:</span> <span class="ruby-keyword">false</span>, <span class="ruby-identifier">locals</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">title</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;My Tweets&quot;</span>,
-      <span class="ruby-identifier">id</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;user&quot;</span>,
-      <span class="ruby-identifier">offset</span><span class="ruby-operator">:</span> <span class="ruby-identifier">request</span>.<span class="ruby-identifier">cookies</span>[<span class="ruby-string">&quot;offset&quot;</span>],
-      <span class="ruby-identifier">tweets</span><span class="ruby-operator">:</span> <span class="ruby-identifier">@@tweet_model</span>.<span class="ruby-identifier">get_tweets_for_user</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>])}
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">post</span> <span class="ruby-string">'/update/check'</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:type</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&quot;news&quot;</span>
-      <span class="ruby-identifier">tweet</span> = <span class="ruby-identifier">@@tweet_model</span>.<span class="ruby-identifier">get_tweets_from_followers</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>], <span class="ruby-value">1</span>)[<span class="ruby-value">0</span>]
-    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:type</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&quot;user&quot;</span>
-      <span class="ruby-identifier">tweet</span> = <span class="ruby-identifier">@@tweet_model</span>.<span class="ruby-identifier">get_tweets_for_user</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:param</span>], <span class="ruby-value">1</span>)[<span class="ruby-value">0</span>]
-    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:type</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&quot;tag&quot;</span>
-      <span class="ruby-identifier">tweet</span> = <span class="ruby-identifier">@@tweet_model</span>.<span class="ruby-identifier">get_tweets_for_tag</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:param</span>][<span class="ruby-node">/[^#]+/</span>], <span class="ruby-value">1</span>)[<span class="ruby-value">0</span>]
-    <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">tweet</span>
-      <span class="ruby-keyword">return</span> <span class="ruby-string">&quot;t&quot;</span> <span class="ruby-keyword">if</span> (<span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">tweet</span>.<span class="ruby-identifier">timestamp</span>.<span class="ruby-identifier">to_i</span>) <span class="ruby-operator">&lt;=</span> <span class="ruby-value">70</span>
-    <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">return</span> <span class="ruby-string">&quot;f&quot;</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">post</span> <span class="ruby-string">'/update/news'</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">slim</span> <span class="ruby-value">:tweet_list</span>, <span class="ruby-identifier">layout</span><span class="ruby-operator">:</span> <span class="ruby-keyword">false</span>, <span class="ruby-identifier">locals</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">title</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;What is Happening&quot;</span>,
-      <span class="ruby-identifier">id</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;tweets&quot;</span>,
-      <span class="ruby-identifier">offset</span><span class="ruby-operator">:</span> <span class="ruby-identifier">request</span>.<span class="ruby-identifier">cookies</span>[<span class="ruby-string">&quot;offset&quot;</span>],
-      <span class="ruby-identifier">tweets</span><span class="ruby-operator">:</span> <span class="ruby-identifier">@@tweet_model</span>.<span class="ruby-identifier">get_tweets_from_followers</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:handle</span>])}
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">post</span> <span class="ruby-string">'/update/user'</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">slim</span> <span class="ruby-value">:tweet_list</span>, <span class="ruby-identifier">layout</span><span class="ruby-operator">:</span> <span class="ruby-keyword">false</span>, <span class="ruby-identifier">locals</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">title</span><span class="ruby-operator">:</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:handle</span>],
-      <span class="ruby-identifier">id</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;tweets&quot;</span>,
-      <span class="ruby-identifier">offset</span><span class="ruby-operator">:</span> <span class="ruby-identifier">request</span>.<span class="ruby-identifier">cookies</span>[<span class="ruby-string">&quot;offset&quot;</span>],
-      <span class="ruby-identifier">tweets</span><span class="ruby-operator">:</span> <span class="ruby-identifier">@@tweet_model</span>.<span class="ruby-identifier">get_tweets_for_user</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:handle</span>])}
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">post</span> <span class="ruby-string">'/update/tag'</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">slim</span> <span class="ruby-value">:tweet_list</span>, <span class="ruby-identifier">layout</span><span class="ruby-operator">:</span> <span class="ruby-keyword">false</span>, <span class="ruby-identifier">locals</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">title</span><span class="ruby-operator">:</span> <span class="ruby-node">&quot;Tweets with tag #{params[:tag]}&quot;</span>,
-      <span class="ruby-identifier">id</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;tweets&quot;</span>,
-      <span class="ruby-identifier">offset</span><span class="ruby-operator">:</span> <span class="ruby-identifier">request</span>.<span class="ruby-identifier">cookies</span>[<span class="ruby-string">&quot;offset&quot;</span>],
-      <span class="ruby-identifier">tweets</span><span class="ruby-operator">:</span> <span class="ruby-identifier">@@tweet_model</span>.<span class="ruby-identifier">get_tweets_for_tag</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:tag</span>][<span class="ruby-node">/[^#]+/</span>])}
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">post</span> <span class="ruby-string">'/complete'</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:query</span>].<span class="ruby-identifier">match</span>(<span class="ruby-node">/^#\S+$/</span>)
-      <span class="ruby-identifier">data</span> = <span class="ruby-constant">JSON</span><span class="ruby-operator">::</span><span class="ruby-identifier">dump</span>(<span class="ruby-identifier">@@tweet_model</span>.<span class="ruby-identifier">tag_search</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:query</span>][<span class="ruby-node">/[^#]+/</span>]))
-    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:query</span>].<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/^\S+$/</span>)
-      <span class="ruby-identifier">data</span> = <span class="ruby-constant">JSON</span><span class="ruby-operator">::</span><span class="ruby-identifier">dump</span>(<span class="ruby-identifier">@@user_model</span>.<span class="ruby-identifier">user_search</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:query</span>]))
-    <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">data</span> = <span class="ruby-constant">JSON</span><span class="ruby-operator">::</span><span class="ruby-identifier">dump</span>([])
-    <span class="ruby-keyword">end</span>
-    <span class="ruby-identifier">content_type</span> <span class="ruby-string">&quot;application/json&quot;</span>
-    <span class="ruby-identifier">data</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">get</span> <span class="ruby-string">'/:id'</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">session</span>[<span class="ruby-value">:user_page</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>]
-      <span class="ruby-identifier">handle</span> = <span class="ruby-identifier">page_user</span> = <span class="ruby-identifier">@@user_model</span>.<span class="ruby-identifier">user_exists?</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
-      <span class="ruby-identifier">page_user</span> = <span class="ruby-identifier">@@user_model</span>.<span class="ruby-identifier">get_user_by_handle</span>(<span class="ruby-identifier">handle</span>)
-      <span class="ruby-identifier">tweets</span> = <span class="ruby-identifier">@@tweet_model</span>.<span class="ruby-identifier">get_tweets_for_user</span>(<span class="ruby-identifier">handle</span>)
-      <span class="ruby-identifier">following</span> = <span class="ruby-identifier">@@user_model</span>.<span class="ruby-identifier">following?</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:user</span>], <span class="ruby-identifier">handle</span>)
-      <span class="ruby-identifier">slim</span> <span class="ruby-value">:user</span>, <span class="ruby-identifier">locals</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">page_title</span><span class="ruby-operator">:</span> <span class="ruby-identifier">handle</span>,
-        <span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-identifier">handle</span>,
-        <span class="ruby-identifier">page_user</span><span class="ruby-operator">:</span> <span class="ruby-identifier">page_user</span>,
-        <span class="ruby-identifier">offset</span><span class="ruby-operator">:</span> <span class="ruby-identifier">request</span>.<span class="ruby-identifier">cookies</span>[<span class="ruby-string">&quot;offset&quot;</span>],
-        <span class="ruby-identifier">tweets</span><span class="ruby-operator">:</span> <span class="ruby-identifier">tweets</span>,
-        <span class="ruby-identifier">following</span><span class="ruby-operator">:</span> <span class="ruby-identifier">following</span>}
-    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">session</span>[<span class="ruby-value">:tag_page</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>][<span class="ruby-node">/[^#]+/</span>]
-      <span class="ruby-identifier">tweets</span> = <span class="ruby-identifier">@@tweet_model</span>.<span class="ruby-identifier">get_tweets_for_tag</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:tag_page</span>])
-      <span class="ruby-identifier">slim</span> <span class="ruby-value">:tag</span>, <span class="ruby-identifier">locals</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">page_title</span><span class="ruby-operator">:</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>],
-        <span class="ruby-identifier">tag</span><span class="ruby-operator">:</span> <span class="ruby-node">&quot;##{params[:id]}&quot;</span>,
-        <span class="ruby-identifier">offset</span><span class="ruby-operator">:</span> <span class="ruby-identifier">request</span>.<span class="ruby-identifier">cookies</span>[<span class="ruby-string">&quot;offset&quot;</span>],
-        <span class="ruby-identifier">tweets</span><span class="ruby-operator">:</span> <span class="ruby-identifier">tweets</span>}
-    <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">redirect</span> <span class="ruby-node">&quot;/search?searchq=#{params[:id]}&quot;</span>
-    <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">end</span></pre>
+<span class="ruby-comment"># File main.rb, line 54</span>
+<span class="ruby-identifier">before</span> <span class="ruby-keyword">do</span>
+</pre>
             </div><!-- unknown-source -->
             
           </div>
@@ -355,6 +170,43 @@
 
           
         </div><!-- unknown-method -->
+
+      
+        <div id="validate_tweet_user_tags-method" class="method-detail ">
+          <a name="method-i-validate_tweet_user_tags"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">validate_tweet_user_tags</span><span
+              class="method-args">(tweet_list)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="validate_tweet_user_tags-source">
+<pre>
+<span class="ruby-comment"># File main.rb, line 43</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">validate_tweet_user_tags</span>(<span class="ruby-identifier">tweet_list</span>)
+  <span class="ruby-identifier">valid</span> = []
+  <span class="ruby-identifier">tagged</span> = []
+  <span class="ruby-identifier">tweet_list</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">tweet</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tagged</span> = <span class="ruby-identifier">tagged</span> <span class="ruby-operator">|</span> <span class="ruby-identifier">tweet</span>.<span class="ruby-identifier">text</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/@[a-z0-9_-]+/</span>)}
+  <span class="ruby-identifier">tagged</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">user</span><span class="ruby-operator">|</span> <span class="ruby-identifier">valid</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">user</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">@@user_model</span>.<span class="ruby-identifier">user_exists?</span>(<span class="ruby-identifier">user</span>[<span class="ruby-regexp">/[^@]+/</span>])}
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">valid</span>.<span class="ruby-identifier">uniq</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- validate_tweet_user_tags-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- validate_tweet_user_tags-method -->
 
       
       </div><!-- public-instance-method-details -->
