@@ -28,6 +28,8 @@ class TwitterClone < Sinatra::Base
         conn = Mongo::Connection.from_uri(ENV['MONGOHQ_URL'])
         db = conn.db(uri.path.gsub(/^\//, ''))
         config.master = db
+      elsif ENV['RACK_ENV'] == 'test'
+        config.master = Mongo::Connection.new.db("twitter_app_testing")
       else
         config.master = Mongo::Connection.new.db("twitter_app")
       end
