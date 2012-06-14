@@ -18,7 +18,7 @@ module NavigationHelpers
       '/signup'
     when /the user('s)? home\s?page/i
       '/home'
-    when /([a-z0-9_-]+)'s profile page/i
+    when /([a-z0-9_-]+)('s)? profile page/i
       '/users/#{$1}'
     when /the #[a-z0-9_-]+ tag page/i
       '/tags/#{$1}'

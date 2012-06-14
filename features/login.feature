@@ -6,7 +6,7 @@ Feature: login
 		  Given I am on the login page
 		  And user "BigAl" exists
 		  When I fill in "handle" with "BigAl" within "#login"
-		  And I press "go" within "#login"
+		  And I press "Go!" within "#login"
 		  Then I should be on the user's homepage
 		  And I should see "BigAl"
 
