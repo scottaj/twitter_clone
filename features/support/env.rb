@@ -6,12 +6,14 @@ require File.join(File.dirname(__FILE__), '..', '..', 'main.rb')
 
 require 'capybara'
 require 'capybara/cucumber'
+require 'test/unit/assertions'
 
 Capybara.app = TwitterClone
 
 class TwitterCloneWorld
   include Capybara::DSL
   Capybara.javascript_driver = :webkit
+  include Test::Unit::Assertions
 end
 
 World do

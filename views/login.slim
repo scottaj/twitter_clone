@@ -4,12 +4,12 @@ javascript:
   document.cookie = "offset="+o
 div class="container-fluid"
   div class="row-fluid"
-    form class="well form-horizontal span12" action="/login" method="post"
+    form class="well form-horizontal span12" id="login" action="/login" method="post"
       h3 Log In:
       div class="row-fluid"
-        input type="text" name="handle" class="span3" placeholder="User Handle"
+        input type="text" name="handle" id="handle" class="span3" placeholder="User Handle"
       div class="row-fluid"
         - if message.match(/.+/)
             div class="alert alert-error span3" = message
       div class="row-fluid"
-          button type="submit" class="btn btn-primary span1" Go! 
+          button type="submit" id="go" class="btn btn-primary span1" Go! 
