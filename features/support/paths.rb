@@ -19,11 +19,17 @@ module NavigationHelpers
     when /the user('s)? home\s?page/i
       '/home'
     when /([a-z0-9_-]+)('s)? profile page/i
-      '/users/#{$1}'
-    when /the #[a-z0-9_-]+ tag page/i
-      '/tags/#{$1}'
+      "/users/#{$1}"
+    when /the #([a-z0-9_-]+) tag page/i
+      "/tags/#{$1}"
+    when /([a-z0-9_-]+)('s)? real page/i
+      "/#{$1}"
+    when /the #([a-z0-9_-]+) real page/i
+      "/#{$1}"
     when /the log\s?out page/i
       '/logout'
+    when /the search page/
+      '/search'
     else
       raise "Can't find mapping from \"#{page_name}\" to a path.\n" +
         "Now, go and add a mapping in #{__FILE__}"

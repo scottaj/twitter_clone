@@ -6,13 +6,13 @@ div class="container-fluid"
         h1 class="span2" id="name" = tag                
       div class="row-fluid"
         div class="span4"
-        div class="span10" id="tag"
+        div class="span10" id="feed"
           ==render :slim, :"tweet_list", locals: {title: "Tweets with tag #{tag}", id: "tweets", offset: offset, tweets: tweets, validated: validated}
       javascript:
           $(function(){
             setInterval(function(){
               checkAndUpdate("tag", $("#name").text(), function(){
-              loadTagUpdates("tweets", "tag", $("#name").text());
+              loadTagUpdates("tweets", "feed", $("#name").text());
               });
-              }, 60000);
+              }, 5000);
               });

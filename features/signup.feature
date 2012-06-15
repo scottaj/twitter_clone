@@ -4,15 +4,15 @@ Feature: Signup
 
 	 Scenario: Sign up with new user handle
 	 	   Given I am on the signup page
-		   And user "HandyMan" does not exist
+		   And user HandyMan does not exist
 		   When I fill in "handle" with "HandyMan" within "#signup"
 		   And I press "Sign Up!" within "#signup"
 		   Then I should be on the login page
-		   And user "HandyMan" exists
+		   And user HandyMan exists
 
 	Scenario: Sign up fails if you enter existing handle
 		  Given I am on the signup page
-		  And user "BigAl" exists
+		  And user BigAl exists
 		  When I fill in "handle" with "BigAl" within "#signup"
 		  And I press "Sign Up!" within "#signup"
 		  Then I should be on the signup page
@@ -20,7 +20,7 @@ Feature: Signup
 
 	Scenario: Sign up fails if you enter a handle with invalid characters
 		  Given I am on the signup page
-		  And user ":-P" does not exist
+		  And user :-P does not exist
 		  When I fill in "handle" with ":-P" within "#signup"
 		  And I press "Sign Up!" within "#signup"
 		  Then I should be on the signup page

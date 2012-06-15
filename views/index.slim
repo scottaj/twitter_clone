@@ -20,7 +20,7 @@ div class="container-fluid"
               checkAndUpdate("news", $("#name").text(), function(){
               loadNewsUpdates("following", "news", $("#name").text());
               });
-              }, 60000);
+              }, 5000);
               });
       div class="row-fluid"      
         div class="span2"
@@ -41,9 +41,9 @@ div class="container-fluid"
                 });
                 });
     div class="span4"    
-      div class="well"
+      div class="well" id="user_box"
         ==render :slim, :'user_following', locals: {title: "#{handle} is following:", users: page_user.following.shuffle}
-      div class="well"
+      div class="well" id="not_following_box"
         ==render :slim, :'user_following', locals: {title: "Have you considered following:", users: not_following}
-      div class="well"
+      div class="well" id="tag_box"
         ==render :slim, :"tag_box", locals: {title: "Trending Tags", size: 10, tags: trending}

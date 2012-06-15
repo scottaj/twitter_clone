@@ -24,7 +24,7 @@ end
 Before do
   DatabaseCleaner.start
   User.create(handle: "BigAl", following: [])
-  User.create(handle: "-__-", following: [])
+  User.create(handle: "-__-", following: ["BigAl"])
 end
 
 After do
