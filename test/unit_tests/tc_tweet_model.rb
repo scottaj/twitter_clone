@@ -9,8 +9,8 @@ Mongoid.configure do |config|
 end
 
 
-require_relative '../../lib/tweet_model'
-require_relative '../../lib/user_model'
+require_relative '../../app/lib/tweet_model'
+require_relative '../../app/lib/user_model'
 require 'test/unit'
 
 class TestTweetModel < Test::Unit::TestCase

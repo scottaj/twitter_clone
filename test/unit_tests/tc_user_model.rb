@@ -7,7 +7,7 @@ Mongoid.configure do |config|
   config.master = Mongo::Connection.new.db(name)
 end
 
-require_relative '../../lib/user_model'
+require_relative '../../app/lib/user_model'
 require 'test/unit'
 
 class TestUserModel < Test::Unit::TestCase
