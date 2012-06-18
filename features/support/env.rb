@@ -7,12 +7,14 @@ require 'bundler/setup'
 ##
 # You can handle all padrino applications using instead:
 #   Padrino.application
-Capybara.app = TwitterClone.tap { |app|  }require 'capybara'
+require 'capybara'
 require 'capybara/cucumber'
 require 'capybara-webkit'
 require 'test/unit/assertions'
 require 'database_cleaner'
 require 'database_cleaner/cucumber'
+
+# Capybara.app = TwitterClone.tap { |app|  }
 
 DatabaseCleaner.strategy = :truncation
 

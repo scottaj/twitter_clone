@@ -13,4 +13,4 @@ alias push='git push'
 alias run='ruby main.rb'
 alias cucumber='bundle exec cucumber'
 alias cucmber='bundle exec cucumber'
-
+alias padrino='bundle exec padrino'
