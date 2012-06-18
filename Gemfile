@@ -7,6 +7,7 @@ gem "slim"
 gem "rake"
 gem "thin"
 gem "padrino"
+gem "bcrypt-ruby", :require => "bcrypt"
 
 group :test do
       gem "capybara"

@@ -58,7 +58,7 @@ class TwitterClone < Padrino::Application
       following = @@user_model.following?(session[:user], handle)
       validated = validate_tweet_user_tags(tweets)
       
-      slim :user, locals: {page_title: handle,
+      render :user, layout: :layout, locals: {page_title: handle,
         handle: handle,
         page_user: page_user,
         offset: request.cookies["offset"],
@@ -76,7 +76,7 @@ class TwitterClone < Padrino::Application
       validated = validate_tweet_user_tags(tweets)
       session[:tag_page] = nil
       
-      slim :tag, locals: {page_title: params[:tag],
+      render :tag, layout: :layout, locals: {page_title: params[:tag],
         tag: "##{params[:tag]}",
         offset: request.cookies["offset"],
         tweets: tweets,
@@ -93,7 +93,7 @@ class TwitterClone < Padrino::Application
     user_tweets = @@tweet_model.get_tweets_for_user(session[:user])
     followed_tweets = @@tweet_model.get_tweets_from_followers(session[:user])
     validated = validate_tweet_user_tags(user_tweets) | validate_tweet_user_tags(followed_tweets)
-    slim :index, locals: {page_title: session[:user],
+    render :index, layout: :layout, locals: {page_title: session[:user],
       handle: session[:user],
       page_user: page_user,
       not_following: not_following,
@@ -113,7 +113,7 @@ class TwitterClone < Padrino::Application
     @navbar_option = "/signup"
     @navbar_text = "Sign Up"
     unless session[:user]
-      slim :login, locals: {page_title: "Login", message: ""}
+      render :login, layout: :layout, locals: {page_title: "Login", message: ""}
     else
       redirect '/'
     end
@@ -127,14 +127,14 @@ class TwitterClone < Padrino::Application
       session[:user] = handle
       redirect '/'
     else
-      slim :login, locals: {page_title: "Login", message: "User handle not found!"}
+      render :login, layout: :layout, locals: {page_title: "Login", message: "User handle not found!"}
     end
   end
 
   get '/signup' do
     @navbar_option = "/login"
     @navbar_text = "Login"
-    slim :signup, locals: {page_title: "Sign Up", message: ""}
+    render :signup, layout: :layout, locals: {page_title: "Sign Up", message: ""}
   end
 
   post '/signup' do
@@ -142,13 +142,13 @@ class TwitterClone < Padrino::Application
     @navbar_text = "Login"
     exists = @@user_model.user_exists?(params[:handle])
     if exists
-      slim :signup, locals: {page_title: "Sign Up", message: "Selected handle is already in use by someone else!"}
+      render :signup, layout: :layout, locals: {page_title: "Sign Up", message: "Selected handle is already in use by someone else!"}
     else
       if params[:handle].match(/^[a-z0-9_-]+$/i)
         User.create(handle: params[:handle], following: [])
         redirect '/'
       else
-        slim :signup, locals: {page_title: "Sign Up", message: "Selected handle has invalid characters!"}
+        render :signup, layout: :layout, locals: {page_title: "Sign Up", message: "Selected handle has invalid characters!"}
       end
     end
   end
@@ -173,13 +173,13 @@ class TwitterClone < Padrino::Application
       if query.match(/#.+/)
         query = query[/[^#]+/]
         redirect "/tags/#{query}" if @@tweet_model.get_tweets_for_tag(query, 1).length == 1
-        slim :bad_search, locals: {page_title: "No Results Found", query: "##{query}"}
+        render :bad_search, layout: :layout, locals: {page_title: "No Results Found", query: "##{query}"}
       elsif query.match(/.+/)
         redirect "/users/#{query}" if @@user_model.user_exists?(query)
-        slim :bad_search, locals: {page_title: "No Results Found", query: "User #{query}"}
+        render :bad_search, layout: :layout, locals: {page_title: "No Results Found", query: "User #{query}"}
       end
     rescue NoMethodError
-      slim :bad_search, locals: {page_title: "No Query Provided", query: "Page"}
+      render :bad_search, layout: :layout, locals: {page_title: "No Query Provided", query: "Page"}
     end
   end  
   
@@ -198,7 +198,7 @@ class TwitterClone < Padrino::Application
   post '/update/tweet' do
     @@tweet_model.tweet(params[:tweet_text], session[:user])
     tweets = @@tweet_model.get_tweets_for_user(session[:user])
-    slim :tweet_list, layout: false, locals: {title: "My Tweets",
+    render :tweet_list, layout: :layout, layout: false, locals: {title: "My Tweets",
       id: "user",
       offset: request.cookies["offset"],
       tweets: tweets,
@@ -221,7 +221,7 @@ class TwitterClone < Padrino::Application
 
   post '/update/news' do
     tweets = @@tweet_model.get_tweets_from_followers(params[:handle])
-    slim :tweet_list, layout: false, locals: {title: "What's Happening",
+    render :tweet_list, layout: false, locals: {title: "What's Happening",
       id: "tweets",
       offset: request.cookies["offset"],
       tweets: tweets,
@@ -230,7 +230,7 @@ class TwitterClone < Padrino::Application
 
   post '/update/user' do
     tweets = @@tweet_model.get_tweets_for_user(params[:handle])
-    slim :tweet_list, layout: false, locals: {title: params[:handle],
+    render :tweet_list, layout: false, locals: {title: params[:handle],
       id: "tweets",
       offset: request.cookies["offset"],
       tweets: tweets,
@@ -239,7 +239,7 @@ class TwitterClone < Padrino::Application
 
   post '/update/tag' do
     tweets = @@tweet_model.get_tweets_for_tag(params[:tag][/[^#]+/])
-    slim :tweet_list, layout: false, locals: {title: "Tweets with tag #{params[:tag]}",
+    render :tweet_list, layout: false, locals: {title: "Tweets with tag #{params[:tag]}",
       id: "tweets",
       offset: request.cookies["offset"],
       tweets: tweets,
