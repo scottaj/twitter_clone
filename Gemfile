@@ -6,7 +6,7 @@ gem "bson_ext"
 gem "slim"
 gem "rake"
 gem "thin"
-gem "padrino"
+gem "padrino", :git => "git://github.com/padrino/padrino-framework.git", :branch => "master"
 gem "bcrypt-ruby", :require => "bcrypt"
 
 group :test do
