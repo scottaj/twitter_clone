@@ -1,6 +1,0 @@
-div class="row-fluid" id="#{id}"
-  h2 = title  
-  - tweets.each do |tweet|
-    div class="row-fluid well"
-      h4 == "<a href=/users/#{tweet.user}>#{tweet.user}</a> - #{(tweet.timestamp.utc + offset.to_i).strftime("%l:%M %p - %a, %B%e, %Y")}"
-      p == tweet.text.gsub(/#[a-z0-9_-]+/i) {|m| "<a href=\"/tags/#{m[/[^#]+/]}\">#{m}</a>"}.gsub(/@[a-z0-9_]+/i) {|m| validated.include?(m) ? "<a href=\"/users/#{m[/[^@]+/]}\">#{m}</a>" : m}
