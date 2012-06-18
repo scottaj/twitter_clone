@@ -3,6 +3,7 @@
 .#*
 *#
 /vendor
+/vendor/bundle
 .bundle
 mongoid.yml
 .DS_Store
