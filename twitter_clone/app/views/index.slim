@@ -1,0 +1,49 @@
+div class="container-fluid"
+  div class="row-fluid"
+    div class="span8"
+      br
+      div class="row-fluid"
+        h1 class="span2" id="name" = handle
+        form class="well form-horizontal span12" action="\home" method="post" id="tweet-box"  
+          div class="row-fluid"
+            textarea class="input-xlarge span8" id="textarea" rows="4" name="tweet_text" placeholder="Enter your tweet"
+          div class="row-fluid"
+            button type="submit" class="btn btn-primary span2" Tweet!    
+      div class="row-fluid"
+        div class="span2"
+        div class="span6" id="news"
+          ==render :slim, :"tweet_list", locals: {title: "What's Happening", id: "following", offset: offset, tweets: followed_tweets, validated: validated}
+        
+        javascript:
+          $(function(){
+            setInterval(function(){
+              checkAndUpdate("news", $("#name").text(), function(){
+              loadNewsUpdates("following", "news", $("#name").text());
+              });
+              }, 5000);
+              });
+      div class="row-fluid"      
+        div class="span2"
+        div class="span6" id="posts"        
+          ==render :slim, :"tweet_list", locals: {title: "My Tweets", id: "user", offset: offset, tweets: user_tweets, validated: validated}
+        javascript:           
+          $(function(){
+            $("#tweet-box").submit(function(event) {
+             
+              event.preventDefault();                                         
+              var text = $("#textarea").val();
+              $("#textarea").val("");
+              $.post('/update/tweet', {tweet_text: text}, function( data ) {                 
+                $("#user").remove();
+                $("#posts").append( data );
+                }
+                );
+                });
+                });
+    div class="span4"    
+      div class="well" id="user_box"
+        ==render :slim, :'user_following', locals: {title: "#{handle} is following:", users: page_user.following.shuffle}
+      div class="well" id="not_following_box"
+        ==render :slim, :'user_following', locals: {title: "Have you considered following:", users: not_following}
+      div class="well" id="tag_box"
+        ==render :slim, :"tag_box", locals: {title: "Trending Tags", size: 10, tags: trending}

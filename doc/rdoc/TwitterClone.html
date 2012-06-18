@@ -34,8 +34,8 @@
         <div class="section-body">
           <ul>
           
-            <li><a href="./main_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
-              class="thickbox" title="main.rb">main.rb</a></li>
+            <li><a href="./app/app_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="app/app.rb">app/app.rb</a></li>
           
           </ul>
         </div>
@@ -50,7 +50,7 @@
       <div id="parent-class-section" class="section">
         <h3 class="section-header">Parent</h3>
         
-        <p class="link">Sinatra::Base</p>
+        <p class="link">Padrino::Application</p>
         
       </div>
       
@@ -66,6 +66,8 @@
         <ul class="link-list">
           
           <li><a href="#method-i-unknown">#unknown</a></li>
+          
+          <li><a href="#method-i-validate_tweet_user_tags">#validate_tweet_user_tags</a></li>
           
         </ul>
       </div>
@@ -93,8 +95,6 @@
 
         <ul class="link-list">
         
-          <li><a href="./Object.html">Object</a></li>
-        
           <li><a href="./Tweet.html">Tweet</a></li>
         
           <li><a href="./TweetModel.html">TweetModel</a></li>
@@ -118,8 +118,6 @@
 
     <div id="description" class="description">
       
-<p>Main application class for sinatra application.</p>
-
     </div><!-- description -->
 
     
@@ -153,23 +151,14 @@
 
           <div class="method-description">
             
-            <h2>App configuration</h2>
-<ul><li>
-<p>Enables sessions</p>
-</li><li>
-<p>Creates Mongoid connection</p>
-</li><li>
-<p>Enable pretty html output from slim.</p>
-</li><li>
-<p>Create models for tweets and users.</p>
-</li></ul>
+            <p>Main routing table for application.</p>
             
 
             
             <div class="method-source-code" id="unknown-source">
 <pre>
-<span class="ruby-comment"># File main.rb, line 21</span>
-<span class="ruby-identifier">configure</span> <span class="ruby-keyword">do</span>
+<span class="ruby-comment"># File app/app.rb, line 39</span>
+<span class="ruby-identifier">before</span> <span class="ruby-keyword">do</span>
 </pre>
             </div><!-- unknown-source -->
             
@@ -179,6 +168,43 @@
 
           
         </div><!-- unknown-method -->
+
+      
+        <div id="validate_tweet_user_tags-method" class="method-detail ">
+          <a name="method-i-validate_tweet_user_tags"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">validate_tweet_user_tags</span><span
+              class="method-args">(tweet_list)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="validate_tweet_user_tags-source">
+<pre>
+<span class="ruby-comment"># File app/app.rb, line 28</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">validate_tweet_user_tags</span>(<span class="ruby-identifier">tweet_list</span>)
+  <span class="ruby-identifier">valid</span> = []
+  <span class="ruby-identifier">tagged</span> = []
+  <span class="ruby-identifier">tweet_list</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">tweet</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tagged</span> = <span class="ruby-identifier">tagged</span> <span class="ruby-operator">|</span> <span class="ruby-identifier">tweet</span>.<span class="ruby-identifier">text</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/@[a-z0-9_-]+/</span>)}
+  <span class="ruby-identifier">tagged</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">user</span><span class="ruby-operator">|</span> <span class="ruby-identifier">valid</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">user</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">@@user_model</span>.<span class="ruby-identifier">user_exists?</span>(<span class="ruby-identifier">user</span>[<span class="ruby-regexp">/[^@]+/</span>])}
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">valid</span>.<span class="ruby-identifier">uniq</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- validate_tweet_user_tags-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- validate_tweet_user_tags-method -->
 
       
       </div><!-- public-instance-method-details -->

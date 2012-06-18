@@ -34,8 +34,8 @@
         <div class="section-body">
           <ul>
           
-            <li><a href="./lib/tweet_model_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
-              class="thickbox" title="lib/tweet_model.rb">lib/tweet_model.rb</a></li>
+            <li><a href="./app/lib/tweet_model_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="app/lib/tweet_model.rb">app/lib/tweet_model.rb</a></li>
           
           </ul>
         </div>
@@ -50,7 +50,7 @@
       <div id="parent-class-section" class="section">
         <h3 class="section-header">Parent</h3>
         
-        <p class="link"><a href="Object.html">Object</a></p>
+        <p class="link">Object</p>
         
       </div>
       
@@ -102,8 +102,6 @@
         </form>
 
         <ul class="link-list">
-        
-          <li><a href="./Object.html">Object</a></li>
         
           <li><a href="./Tweet.html">Tweet</a></li>
         
@@ -183,7 +181,7 @@ most recent tweets will be first in the array.</p>
             
             <div class="method-source-code" id="get_tweets_for_tag-source">
 <pre>
-<span class="ruby-comment"># File lib/tweet_model.rb, line 50</span>
+<span class="ruby-comment"># File app/lib/tweet_model.rb, line 50</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get_tweets_for_tag</span>(<span class="ruby-identifier">tag</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-value">50</span>)
   <span class="ruby-identifier">tweets</span> = []
   <span class="ruby-constant">Tweet</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">tags</span><span class="ruby-operator">:</span> <span class="ruby-identifier">tag</span>).<span class="ruby-identifier">desc</span>(<span class="ruby-value">:timestamp</span>).<span class="ruby-identifier">limit</span>(<span class="ruby-identifier">limit</span>).<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">tweet</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tweets</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">tweet</span>}
@@ -229,7 +227,7 @@ most recent tweets will be first in the eumerable.</p>
             
             <div class="method-source-code" id="get_tweets_for_user-source">
 <pre>
-<span class="ruby-comment"># File lib/tweet_model.rb, line 33</span>
+<span class="ruby-comment"># File app/lib/tweet_model.rb, line 33</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get_tweets_for_user</span>(<span class="ruby-identifier">handle</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-value">50</span>)
   <span class="ruby-identifier">tweets</span> = []
   <span class="ruby-constant">Tweet</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">user</span><span class="ruby-operator">:</span> <span class="ruby-identifier">handle</span>).<span class="ruby-identifier">desc</span>(<span class="ruby-value">:timestamp</span>).<span class="ruby-identifier">limit</span>(<span class="ruby-identifier">limit</span>).<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">tweet</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tweets</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">tweet</span>}
@@ -274,7 +272,7 @@ recent tweets.</p>
             
             <div class="method-source-code" id="get_tweets_from_followers-source">
 <pre>
-<span class="ruby-comment"># File lib/tweet_model.rb, line 64</span>
+<span class="ruby-comment"># File app/lib/tweet_model.rb, line 64</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get_tweets_from_followers</span>(<span class="ruby-identifier">handle</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-value">50</span>)
   <span class="ruby-identifier">tweets</span> = []
   <span class="ruby-constant">User</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-identifier">handle</span>).<span class="ruby-identifier">first</span>.<span class="ruby-identifier">following</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">followed</span><span class="ruby-operator">|</span>
@@ -327,7 +325,7 @@ no duplicates.</p>
             
             <div class="method-source-code" id="tag_search-source">
 <pre>
-<span class="ruby-comment"># File lib/tweet_model.rb, line 107</span>
+<span class="ruby-comment"># File app/lib/tweet_model.rb, line 107</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">tag_search</span>(<span class="ruby-identifier">tag</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-value">50</span>)
   <span class="ruby-identifier">results</span> = []
   <span class="ruby-constant">Tweet</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">tags</span><span class="ruby-operator">:</span> <span class="ruby-node">/#{tag}/</span>).<span class="ruby-identifier">desc</span>(<span class="ruby-value">:timestamp</span>).<span class="ruby-identifier">limit</span>(<span class="ruby-identifier">limit</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">tweet</span><span class="ruby-operator">|</span>
@@ -373,7 +371,7 @@ highest tag count.</p>
             
             <div class="method-source-code" id="trending_tags-source">
 <pre>
-<span class="ruby-comment"># File lib/tweet_model.rb, line 81</span>
+<span class="ruby-comment"># File app/lib/tweet_model.rb, line 81</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">trending_tags</span>(<span class="ruby-identifier">limit</span> = <span class="ruby-value">100</span>)
   <span class="ruby-identifier">tags</span> = {}
   <span class="ruby-constant">Tweet</span>.<span class="ruby-identifier">where</span>().<span class="ruby-identifier">desc</span>(<span class="ruby-value">:timestamp</span>).<span class="ruby-identifier">limit</span>(<span class="ruby-identifier">limit</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">tweet</span><span class="ruby-operator">|</span>
@@ -426,7 +424,7 @@ href="Tweet.html">Tweet</a>.</p>
             
             <div class="method-source-code" id="tweet-source">
 <pre>
-<span class="ruby-comment"># File lib/tweet_model.rb, line 16</span>
+<span class="ruby-comment"># File app/lib/tweet_model.rb, line 16</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">tweet</span>(<span class="ruby-identifier">text</span>, <span class="ruby-identifier">user</span>)
   <span class="ruby-identifier">tags</span> = []
   <span class="ruby-identifier">text</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-node">/#\S+/</span>) {<span class="ruby-operator">|</span><span class="ruby-identifier">match</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tags</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">match</span>[<span class="ruby-node">/[^#][a-z0-9_-]+/</span>]}

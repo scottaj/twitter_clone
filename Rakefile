@@ -4,7 +4,7 @@ require 'rdoc/task'
 require 'rake/testtask'
 
 RDoc::Task.new do |rdoc|
-   files =['README.md', 'lib/**/*.rb', 'lib/**/*.rbw', 'main.rb']
+   files =['README.md', 'app/**/*.rb', 'app/**/*.rbw', 'app/*.rb', 'app/*.rbw']
    rdoc.rdoc_files.add(files)
    rdoc.main = 'README.md'
    rdoc.title = "Twitter Clone Source Documentation"

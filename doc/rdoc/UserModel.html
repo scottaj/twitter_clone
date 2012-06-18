@@ -34,8 +34,8 @@
         <div class="section-body">
           <ul>
           
-            <li><a href="./lib/user_model_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
-              class="thickbox" title="lib/user_model.rb">lib/user_model.rb</a></li>
+            <li><a href="./app/lib/user_model_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="app/lib/user_model.rb">app/lib/user_model.rb</a></li>
           
           </ul>
         </div>
@@ -50,7 +50,7 @@
       <div id="parent-class-section" class="section">
         <h3 class="section-header">Parent</h3>
         
-        <p class="link"><a href="Object.html">Object</a></p>
+        <p class="link">Object</p>
         
       </div>
       
@@ -104,8 +104,6 @@
         </form>
 
         <ul class="link-list">
-        
-          <li><a href="./Object.html">Object</a></li>
         
           <li><a href="./Tweet.html">Tweet</a></li>
         
@@ -183,7 +181,7 @@ you want returned.</p>
             
             <div class="method-source-code" id="find_not_following-source">
 <pre>
-<span class="ruby-comment"># File lib/user_model.rb, line 74</span>
+<span class="ruby-comment"># File app/lib/user_model.rb, line 74</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">find_not_following</span>(<span class="ruby-identifier">handle</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-value">10</span>)
   <span class="ruby-identifier">not_followed</span> = []
   <span class="ruby-identifier">followed</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-identifier">handle</span>).<span class="ruby-identifier">first</span>.<span class="ruby-identifier">following</span>
@@ -230,7 +228,7 @@ you want returned.</p>
             
             <div class="method-source-code" id="follow_user-source">
 <pre>
-<span class="ruby-comment"># File lib/user_model.rb, line 39</span>
+<span class="ruby-comment"># File app/lib/user_model.rb, line 39</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">follow_user</span>(<span class="ruby-identifier">follower</span>, <span class="ruby-identifier">following</span>)
   <span class="ruby-constant">User</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-identifier">follower</span>).<span class="ruby-identifier">first</span>.<span class="ruby-identifier">push</span>(<span class="ruby-value">:following</span>, <span class="ruby-identifier">following</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -273,7 +271,7 @@ you want returned.</p>
             
             <div class="method-source-code" id="following-3F-source">
 <pre>
-<span class="ruby-comment"># File lib/user_model.rb, line 61</span>
+<span class="ruby-comment"># File app/lib/user_model.rb, line 61</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">following?</span>(<span class="ruby-identifier">follower</span>, <span class="ruby-identifier">following</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">User</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-identifier">follower</span>, <span class="ruby-identifier">following</span><span class="ruby-operator">:</span> <span class="ruby-identifier">following</span>).<span class="ruby-identifier">first</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
@@ -313,7 +311,7 @@ an object is generated with the database info and returned.</p>
             
             <div class="method-source-code" id="get_user_by_handle-source">
 <pre>
-<span class="ruby-comment"># File lib/user_model.rb, line 28</span>
+<span class="ruby-comment"># File app/lib/user_model.rb, line 28</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get_user_by_handle</span>(<span class="ruby-identifier">handle</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-constant">User</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-identifier">handle</span>).<span class="ruby-identifier">first</span>
 <span class="ruby-keyword">end</span></pre>
@@ -356,7 +354,7 @@ an object is generated with the database info and returned.</p>
             
             <div class="method-source-code" id="unfollow_user-source">
 <pre>
-<span class="ruby-comment"># File lib/user_model.rb, line 50</span>
+<span class="ruby-comment"># File app/lib/user_model.rb, line 50</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">unfollow_user</span>(<span class="ruby-identifier">follower</span>, <span class="ruby-identifier">following</span>)
   <span class="ruby-constant">User</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-identifier">follower</span>).<span class="ruby-identifier">first</span>.<span class="ruby-identifier">pull</span>(<span class="ruby-value">:following</span>, <span class="ruby-identifier">following</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -396,7 +394,7 @@ otherwise.</p>
             
             <div class="method-source-code" id="user_exists-3F-source">
 <pre>
-<span class="ruby-comment"># File lib/user_model.rb, line 15</span>
+<span class="ruby-comment"># File app/lib/user_model.rb, line 15</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">user_exists?</span>(<span class="ruby-identifier">handle</span>)
   <span class="ruby-identifier">user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-node">/^#{handle}$/</span>).<span class="ruby-identifier">first</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">handle</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">user</span>
@@ -445,7 +443,7 @@ you want returned.</p>
             
             <div class="method-source-code" id="user_search-source">
 <pre>
-<span class="ruby-comment"># File lib/user_model.rb, line 91</span>
+<span class="ruby-comment"># File app/lib/user_model.rb, line 91</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">user_search</span>(<span class="ruby-identifier">handle</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-value">50</span>)
   <span class="ruby-identifier">results</span> = []
   <span class="ruby-constant">User</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">handle</span><span class="ruby-operator">:</span> <span class="ruby-node">/#{handle}/</span>).<span class="ruby-identifier">limit</span>(<span class="ruby-identifier">limit</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">user</span><span class="ruby-operator">|</span>
